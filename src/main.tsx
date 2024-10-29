@@ -2,13 +2,13 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
-import Book from './routes/book'
-import Root, { loader as rootLoader } from "./routes/root"
+import Book, { bookLoader } from './routes/book'
+import Root from "./routes/root"
 import Popular from "./routes/popular"
 import ErrorPage from "./error-page"
 import HomePage from "./routes/home"
 
-const router = createBrowserRouter([
+const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
     {
         path: "/",
         element: <Root />,
@@ -21,6 +21,7 @@ const router = createBrowserRouter([
             {
                 path: "/book/:bookId",
                 element: <Book />,
+                loader: bookLoader,
             },
             {
                 path: "/popular",

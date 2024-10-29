@@ -1,39 +1,32 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
+import { BookData } from '../types';
+import { useLoaderData } from 'react-router-dom';
 
-interface BookProps {
-    bookId: string; // ID to fetch book details from API later
+export async function bookLoader({ params }): Promise<BookData> {
+    // Placeholder data; replace with API fetch when ready
+    const placeholderBook: BookData = {
+        id: params.bookId,
+        title: 'Sample Book Title',
+        author: 'Sample Author',
+        description: 'This is a placeholder description of the book.',
+        price: 19.99,
+        coverImage: 'https://robohash.org/you.png?size=200x200',
+    };
+    return placeholderBook;
 }
 
-interface BookData {
-    title: string;
-    author: string;
-    description: string;
-    price: string;
-    coverImage: string;
-}
+const Book: FC = () => {
+    const book = useLoaderData() as BookData;
 
-const Book: FC<BookProps> = ({ bookId }) => {
-    const [book, setBook] = useState<BookData | null>(null);
-
-    useEffect(() => {
-        // Placeholder data; replace with API fetch when ready
-        const placeholderBook: BookData = {
-            title: 'Sample Book Title',
-            author: 'Sample Author',
-            description: 'This is a placeholder description of the book.',
-            price: '$19.99',
-            coverImage: 'https://robohash.org/you.png?size=200x200',
-        };
-
-        // Simulate fetching data (replace this with actual API call)
-        setBook(placeholderBook);
-    }, [bookId]);
 
     if (!book) return <p>Loading book details...</p>;
 
     return (
         <div className="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg overflow-hidden">
             <div className="flex">
+                <div>
+                    <p>{book.id}</p>
+                </div>
                 {/* Book cover image */}
                 <div className="w-1/3">
                     <img

@@ -54,9 +54,7 @@ const Popular: React.FC = () => {
                         <div className="p-4">
                             <h3 className="text-xl font-semibold text-gray-900">{book.title}</h3>
                             <p className="text-gray-600 mb-4">by {book.author}</p>
-                            <Link
-                                to="/book/1"
-                            >
+                            <Link to="/book/1" >
                                 <button className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition duration-300">
                                     View Details
                                 </button>
