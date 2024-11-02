@@ -10,7 +10,7 @@ const HomePage: React.FC = () => {
             <section className="bg-blue-600 text-white py-20">
                 <div className="container mx-auto text-center">
                     <h1 className="text-4xl font-bold mb-4">Welcome to Book Haven</h1>
-                    <p className="text-lg mb-6">
+                    <p className="text-lg max-w-2xl mx-auto mb-6">
                         Discover your next great read at our online bookstore. From classics to the latest releases, we have something for everyone.
                     </p>
                     <Link to="/popular">
@@ -24,7 +24,6 @@ const HomePage: React.FC = () => {
             {/* Featured Books Section */}
             <section className="container mx-auto py-16">
                 <h2 className="text-3xl font-bold text-center text-gray-800 mb-8">Featured Books</h2>
-
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
                     {/* Placeholder book cards */}
                     {Array.from({ length: 3 }).map((_, index) => (

@@ -1,6 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import './index.css'
 import Book, { bookLoader } from './routes/book'
 import Root from "./routes/root"
@@ -24,8 +24,14 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
                 loader: bookLoader,
             },
             {
-                path: "/popular",
-                element: <Popular />,
+                path: "/search",
+                element: <div><Outlet /></div>,
+                children: [
+                    {
+                        path: "/search/popular",
+                        element: <Popular />,
+                    },
+                ]
             },
 
         ]
