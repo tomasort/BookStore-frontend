@@ -50,6 +50,22 @@ const Root: FC = () => {
                                     About
                                 </Link>
                             </li>
+                            <li>
+                                <Link
+                                    to="/login"
+                                    className="hover:text-blue-200 font-medium transition duration-300"
+                                >
+                                    Login
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    to="/cart"
+                                    className="hover:text-blue-200 font-medium transition duration-300"
+                                >
+                                    Cart
+                                </Link>
+                            </li>
                         </ul>
                     </nav>
                 </div>

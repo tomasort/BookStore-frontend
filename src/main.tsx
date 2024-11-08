@@ -7,6 +7,8 @@ import Root from "./routes/root"
 import Popular from "./routes/popular"
 import ErrorPage from "./error-page"
 import HomePage from "./routes/home"
+import Login from "./routes/login"
+import Cart from "./routes/cart"
 
 const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
     {
@@ -24,6 +26,14 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
                 loader: bookLoader,
             },
             {
+                path: "/login",
+                element: <Login />,
+            },
+            {
+                path: "/cart",
+                element: <Cart />,
+            },
+            {
                 path: "/search",
                 element: <div><Outlet /></div>,
                 children: [
@@ -33,7 +43,6 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
                     },
                 ]
             },
-
         ]
     },
 ]);

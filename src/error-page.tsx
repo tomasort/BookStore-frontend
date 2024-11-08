@@ -5,6 +5,7 @@ import { useRouteError } from "react-router-dom";
 export default function ErrorPage() {
     const error: any = useRouteError();
     console.error(error);
+    // TODO something here
 
     return (
         <div
@@ -16,6 +17,7 @@ export default function ErrorPage() {
             <p className="text-gray-500 italic">
                 <i>{error.statusText || error.message}</i>
             </p>
+            {/* TODO: add a button to go back to the front page */}
         </div>
     );
 }
