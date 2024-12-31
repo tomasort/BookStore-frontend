@@ -3,16 +3,21 @@ import { BookData } from '../types';
 import { useLoaderData } from 'react-router-dom';
 
 export async function bookLoader({ params }): Promise<BookData> {
-    // Placeholder data; replace with API fetch when ready
-    const placeholderBook: BookData = {
-        id: params.bookId,
-        title: 'Sample Book Title',
-        author: 'Sample Author',
-        description: 'This is a placeholder description of the book.',
-        price: 19.99,
-        coverImage: 'https://robohash.org/you.png?size=200x200',
-    };
-    return placeholderBook;
+    const bookId = params.bookId; // Extract the bookId from the route parameters
+    try {
+        // Fetch book data from the API
+        const response = await fetch(`/api/books-api/books/${bookId}`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch book with ID ${bookId}. Status: ${response.status}`);
+        }
+
+        const bookData: BookData = await response.json();
+        return bookData;
+    } catch (error) {
+        console.error('Error loading book:', error);
+        throw error; // Let the router handle the error
+    }
 }
 
 const Book: FC = () => {
@@ -30,7 +35,7 @@ const Book: FC = () => {
                 {/* Book cover image */}
                 <div className="w-1/3">
                     <img
-                        src={book.coverImage}
+                        src={`/images${book.cover_url}`}
                         alt={`Cover of ${book.title}`}
                         className="w-full h-full object-cover rounded-md"
                     />
