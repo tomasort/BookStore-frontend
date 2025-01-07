@@ -6,7 +6,7 @@ export async function bookLoader({ params }): Promise<BookData> {
     const bookId = params.bookId; // Extract the bookId from the route parameters
     try {
         // Fetch book data from the API
-        const response = await fetch(`/api/books-api/books/${bookId}`);
+        const response = await fetch(`/api/api/books/${bookId}`);
 
         if (!response.ok) {
             throw new Error(`Failed to fetch book with ID ${bookId}. Status: ${response.status}`);
@@ -20,7 +20,7 @@ export async function bookLoader({ params }): Promise<BookData> {
     }
 }
 
-const Book: FC = () => {
+const BookPage: FC = () => {
     const book = useLoaderData() as BookData;
 
 
@@ -63,5 +63,5 @@ const Book: FC = () => {
     );
 };
 
-export default Book;
+export default BookPage;
 
