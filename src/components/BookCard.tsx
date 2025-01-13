@@ -1,6 +1,6 @@
-import { BookData } from '../types';
+import { BookCardData } from '../types';
 
-export default function BookCard({ id, cover_url, title, authors, current_price }: BookData) {
+export default function BookCard({ id, cover_url, title, authors, current_price }: BookCardData) {
 
     const handleClick = () => {
         // Navigate to the book's URL

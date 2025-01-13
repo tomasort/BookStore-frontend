@@ -14,7 +14,7 @@ export interface Publisher {
     name: string;
 }
 
-export interface BookData {
+export interface BookDetailsData {
     id: number;
     title: string;
     subtitle: string | null;
@@ -52,3 +52,18 @@ export interface BookData {
     languages: string[]; // Array of language names
 }
 
+export interface BookCardData {
+    id: number;
+    title: string;
+    subtitle: string | null;
+    isbn_10: string | null;
+    isbn_13: string | null;
+    authors: Author[];
+    series: string[];
+    publishers: Publisher[];
+    genres: Genre[];
+    previous_price: string | null;
+    current_price: string;
+    cover_url: string | null;
+    rating: number | null;
+}
