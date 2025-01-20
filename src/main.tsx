@@ -11,6 +11,11 @@ import Login from "./routes/login"
 import Cart from "./routes/cart"
 import Register from "./routes/register"
 import Checkout from "./routes/checkout"
+import UserSidebar from './components/UserSidebar'
+import UserDashboard, { profileLoader } from './routes/user-dashboard'
+import { NotificationProvider } from './context/NotificationContext';
+import Example from './routes/example';
+
 
 const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
     {
@@ -30,6 +35,15 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             {
                 path: "/login",
                 element: <Login />,
+            },
+            {
+                path: "/sidebar",
+                element: <UserSidebar />,
+            },
+            {
+                path: "/user-dashboard/",
+                element: <UserDashboard />,
+                loader: profileLoader,
             },
             {
                 path: "/register",
@@ -59,6 +73,8 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <RouterProvider router={router} />
+        <NotificationProvider>
+            <RouterProvider router={router} />
+        </NotificationProvider>
     </StrictMode>,
 )

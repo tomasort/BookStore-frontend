@@ -62,8 +62,45 @@ export interface BookCardData {
     series: string[];
     publishers: Publisher[];
     genres: Genre[];
-    previous_price: string | null;
-    current_price: string;
+    previous_price: number | null;
+    current_price: number;
     cover_url: string | null;
     rating: number | null;
+}
+
+export interface User {
+    id: number;
+    username: string;
+    email: string;
+    first_name: string | null;
+    last_name: string | null;
+    date_of_birth: string | null;
+    phone_number: string | null;
+    account_type: string;
+    active: boolean;
+    created_at: string;
+    last_login: string | null;
+    newsletter_subscription: boolean;
+    password_hash: string;
+    preferred_language: string;
+    role: string;
+    session_token: string | null;
+    shipping_address: string | null;
+    shipping_city: string | null;
+    shipping_country: string | null;
+    shipping_postal_code: string | null;
+    shipping_state: string | null;
+    status: string;
+    id_number: string | null;
+    id_type: string | null;
+    favorites: BookCardData[]; // Adjust the type as needed
+    orders: any[]; // Adjust the type as needed
+    wishlist: BookCardData[]; // Adjust the type as needed
+}
+
+export interface CartItem {
+    id: number;
+    quantity: number;
+    book: BookCardData;
+    in_stock: boolean;
 }

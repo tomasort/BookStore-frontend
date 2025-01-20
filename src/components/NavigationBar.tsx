@@ -1,6 +1,13 @@
 import { Link } from 'react-router-dom';
+import {
+    ShoppingBagIcon,
+} from '@heroicons/react/24/outline'
+import getUserId from '../getUserId';
+import Logout from './Logout';
 
 function NavigationBar() {
+
+
     return (
         <nav>
             <ul className="flex space-x-6">
@@ -37,20 +44,33 @@ function NavigationBar() {
                     </Link>
                 </li>
                 <li>
-                    <Link
-                        to="/login"
-                        className="hover:text-blue-200 font-medium transition duration-300"
-                    >
-                        Login
-                    </Link>
+                    {getUserId() ? (
+                        <Logout />
+                    ) : (
+                        <Link
+                            to="/login"
+                            className="hover:text-blue-200 font-medium transition duration-300"
+                        >
+                            Login
+                        </Link>
+                    )}
                 </li>
                 <li>
-                    <Link
-                        to="/register"
-                        className="hover:text-blue-200 font-medium transition duration-300"
-                    >
-                        Register
-                    </Link>
+                    {getUserId() ? (
+                        <Link
+                            to="/user-dashboard"
+                            className="hover:text-blue-200 font-medium transition duration-300"
+                        >
+                            Settings
+                        </Link>
+                    ) : (
+                        <Link
+                            to="/register"
+                            className="hover:text-blue-200 font-medium transition duration-300"
+                        >
+                            Register
+                        </Link>
+                    )}
                 </li>
                 <li>
                     <Link
@@ -58,14 +78,6 @@ function NavigationBar() {
                         className="hover:text-blue-200 font-medium transition duration-300"
                     >
                         Cart
-                    </Link>
-                </li>
-                <li>
-                    <Link
-                        to="/checkout"
-                        className="hover:text-blue-200 font-medium transition duration-300"
-                    >
-                        Checkout
                     </Link>
                 </li>
             </ul>
