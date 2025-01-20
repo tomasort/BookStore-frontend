@@ -11,7 +11,7 @@ function Login() {
     });
     const [error, setError] = useState('');
 
-    const handleInputChange = (e) => {
+    const handleInputChange = (e: any) => {
         const { name, value, type, checked } = e.target;
         setFormData(prev => ({
             ...prev,
@@ -19,7 +19,7 @@ function Login() {
         }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
             const response = await fetch('api/auth/login', {
@@ -39,10 +39,15 @@ function Login() {
             if (!response.ok) {
                 throw new Error(data.error || 'Login failed');
             }
+            const userId = data.user_id;
+
+            // Save the user ID in the session storage
+            sessionStorage.setItem('userId', userId);
+            sessionStorage.setItem('userStatus', 'loggedIn');
 
             // Handle successful login
-            window.location.href = '/dashboard'; // Or use router navigation
-        } catch (err) {
+            window.location.href = `/user-dashboard`; // Or use router navigation
+        } catch (err: any) {
             setError(err.message);
         }
     };

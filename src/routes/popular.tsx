@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import BookCard from '../components/BookCard';
+import Pagination from '../components/Pagination';
 import { BookData } from '../types';
 
 function Popular() {
@@ -48,39 +49,32 @@ function Popular() {
                 <p>Loading...</p>
             ) : (
                 <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {books.map((book) => (
-                            <BookCard
-                                key={book.id}
-                                id={book.id}
-                                cover_url={book.cover_url}
-                                title={book.title}
-                                authors={book.authors}
-                                current_price={book.current_price}
-                            />
-                        ))}
-                    </div>
-                    <div className="flex justify-between items-center mt-6">
-                        <button
-                            onClick={() => handlePageChange(pagination.page - 1)}
-                            disabled={!pagination.has_prev}
-                            className={`px-4 py-2 text-white ${pagination.has_prev ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-300 cursor-not-allowed'
-                                }`}
-                        >
-                            Previous
-                        </button>
-                        <span className="text-gray-700">
-                            Page {pagination.page} of {pagination.pages}
-                        </span>
-                        <button
-                            onClick={() => handlePageChange(pagination.page + 1)}
-                            disabled={!pagination.has_next}
-                            className={`px-4 py-2 text-white ${pagination.has_next ? 'bg-blue-500 hover:bg-blue-600' : 'bg-gray-300 cursor-not-allowed'
-                                }`}
-                        >
-                            Next
-                        </button>
-                    </div>
+                    {/* Grid of books */}
+                    {books.length === 0 ? (
+                        <p>No books found</p>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                            {books.map((book) => (
+                                <BookCard
+                                    key={book.id}
+                                    id={book.id}
+                                    cover_url={book.cover_url}
+                                    title={book.title}
+                                    authors={book.authors}
+                                    current_price={book.current_price}
+                                />
+                            ))}
+                        </div>
+                    )}
+
+                    {/* Pagination */}
+                    <Pagination
+                        page={pagination.page}
+                        pages={pagination.pages}
+                        hasPrev={pagination.has_prev}
+                        hasNext={pagination.has_next}
+                        onPageChange={handlePageChange}
+                    />
                 </>
             )}
         </div>
