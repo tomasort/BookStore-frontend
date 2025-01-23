@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import { User } from "../types";
 import getUserId from "../getUserId";
+import getCsrfToken from "@/getCsrfToken";
 
 const DEFAULT_USER_INFO = {
     firstName: 'First Name',
@@ -13,11 +14,14 @@ const DEFAULT_USER_INFO = {
     dateOfBirth: 'Date of Birth',
 };
 
-const DEFAULT_PASSWORD_FORM = {
-    currentPassword: '*******',
-    newPassword: '',
-    confirmPassword: '',
-};
+const userInfoFields = [
+    { label: 'First name', name: 'firstName', type: 'text', autoComplete: 'given-name' },
+    { label: 'Last name', name: 'lastName', type: 'text', autoComplete: 'family-name' },
+    { label: 'Email address', name: 'email', type: 'email', autoComplete: 'email' },
+    { label: 'Username', name: 'username', type: 'text', autoComplete: 'username' },
+    { label: 'Phone number', name: 'phonenumber', type: 'text', autoComplete: 'tel' },
+    { label: 'Date of Birth', name: 'dateOfBirth', type: 'text', autoComplete: 'bday' },
+];
 
 
 const secondaryNavigation = [
@@ -56,6 +60,12 @@ export default function UserDashboard() {
         dateOfBirth: user.date_of_birth || DEFAULT_USER_INFO.dateOfBirth,
     });
 
+    const [passwordFormData, setPasswordFormData] = useState({
+        current_password: '',
+        new_password: '',
+        confirm_password: '',
+    });
+
     const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
         const fieldName = e.target.name;
         if (e.target.value === DEFAULT_USER_INFO[fieldName as keyof typeof DEFAULT_USER_INFO]) {
@@ -76,7 +86,7 @@ export default function UserDashboard() {
         }
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleChangeUserInfoForm = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setUserInfoFormData((prev) => ({
             ...prev,
@@ -87,11 +97,14 @@ export default function UserDashboard() {
     const handleSaveUserInfo = async (e) => {
         e.preventDefault();
         console.log('Saving user info');
+        console.log(user)
         const response = await fetch(`/api/auth/users/${user.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken(),
             },
+            credentials: 'include',
             body: JSON.stringify({
                 first_name: userInfoFormData.firstName,
                 last_name: userInfoFormData.lastName,
@@ -103,9 +116,35 @@ export default function UserDashboard() {
         });
     }
 
-    const handleChangePassword = async (e) => {
+    const handleChangePasswordForm = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setPasswordFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleSavePasswordForm = async (e) => {
         e.preventDefault();
         console.log('Changing password info');
+        // check that the new password and confirm password match
+        if (passwordFormData.new_password !== passwordFormData.confirm_password) {
+            console.error('Passwords do not match');
+            return;
+        }
+        const response = await fetch(`/api/auth/users/${user.id}/password`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': getCsrfToken(),
+            },
+            credentials: 'include',
+            body: JSON.stringify({
+                current_password: passwordFormData.current_password,
+                new_password: passwordFormData.new_password,
+            }),
+        });
+        console.log(response);
     }
 
     if (!user) return <p>Loading User details...</p>;
@@ -146,6 +185,7 @@ export default function UserDashboard() {
                                 </p>
                             </div>
                             <form className="md:col-span-2">
+
                                 <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:max-w-xl sm:grid-cols-6">
                                     <div className="col-span-full flex items-center gap-x-8">
                                         <img
@@ -163,89 +203,26 @@ export default function UserDashboard() {
                                             <p className="mt-2 text-xs leading-5 text-gray-400">JPG, GIF or PNG. 1MB max.</p>
                                         </div>
                                     </div>
-
-                                    <div className="sm:col-span-3">
-                                        <label htmlFor="first-name" className="block text-sm font-medium leading-6 ">
-                                            First name
-                                        </label>
-                                        <div className="mt-2">
-                                            <input
-                                                type="text"
-                                                name="firstName"
-                                                id="firstName"
-                                                autoComplete="given-name"
-                                                value={userInfoFormData.firstName}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                className="block w-full rounded-md border-0 bg-white/5 py-1.5  shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="sm:col-span-3">
-                                        <label htmlFor="last-name" className="block text-sm font-medium leading-6 ">
-                                            Last name
-                                        </label>
-                                        <div className="mt-2">
-                                            <input
-                                                type="text"
-                                                name="last-name"
-                                                id="last-name"
-                                                autoComplete="family-name"
-                                                value={userInfoFormData.lastName}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                className="block w-full rounded-md border-0 bg-white/5 py-1.5  shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-span-full">
-                                        <label htmlFor="email" className="block text-sm font-medium leading-6 ">
-                                            Email address
-                                        </label>
-                                        <div className="mt-2">
-                                            <input
-                                                id="email"
-                                                name="email"
-                                                type="email"
-                                                autoComplete="email"
-                                                value={userInfoFormData.email}
-                                                onFocus={handleFocus}
-                                                onBlur={handleBlur}
-                                                onChange={handleChange}
-                                                className="block w-full rounded-md border-0 bg-white/5 py-1.5  shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
-                                            />
-                                        </div>
-                                    </div>
-
-                                    <div className="col-span-full">
-                                        <label htmlFor="username" className="block text-sm font-medium leading-6 ">
-                                            Username
-                                        </label>
-                                        <div className="mt-2">
-                                            <div className="flex rounded-md bg-white/5 ring-1 ring-inset ring-white/10 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500">
-                                                <span className="flex select-none items-center pl-3 text-gray-400 sm:text-sm">
-                                                    bookstore.com/
-                                                </span>
+                                    {userInfoFields.map((field) => (
+                                        <div key={field.name} className="sm:col-span-3">
+                                            <label htmlFor={field.name} className="block text-sm font-medium leading-6 ">
+                                                {field.label}
+                                            </label>
+                                            <div className="mt-2">
                                                 <input
-                                                    type="text"
-                                                    name="username"
-                                                    id="username"
-                                                    autoComplete="username"
-                                                    value={userInfoFormData.username}
+                                                    type={field.type}
+                                                    name={field.name}
+                                                    id={field.name}
+                                                    autoComplete={field.autoComplete}
+                                                    value={userInfoFormData[field.name as keyof typeof userInfoFormData]}
                                                     onFocus={handleFocus}
                                                     onBlur={handleBlur}
-                                                    onChange={handleChange}
-                                                    className="flex-1 border-0 bg-transparent py-1.5 pl-1  focus:ring-0 sm:text-sm sm:leading-6"
+                                                    onChange={handleChangeUserInfoForm}
+                                                    className="block w-full rounded-md border-0 bg-white/5 py-1.5  shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                                 />
                                             </div>
                                         </div>
-                                    </div>
-
-
+                                    ))}
                                 </div>
 
                                 <div className="mt-8 flex">
@@ -280,6 +257,7 @@ export default function UserDashboard() {
                                                 name="current_password"
                                                 type="password"
                                                 autoComplete="current-password"
+                                                onChange={handleChangePasswordForm}
                                                 className="block w-full rounded-md border-0 bg-white/5 py-1.5  shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                             />
                                         </div>
@@ -295,6 +273,7 @@ export default function UserDashboard() {
                                                 name="new_password"
                                                 type="password"
                                                 autoComplete="new-password"
+                                                onChange={handleChangePasswordForm}
                                                 className="block w-full rounded-md border-0 bg-white/5 py-1.5  shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                             />
                                         </div>
@@ -310,6 +289,7 @@ export default function UserDashboard() {
                                                 name="confirm_password"
                                                 type="password"
                                                 autoComplete="new-password"
+                                                onChange={handleChangePasswordForm}
                                                 className="block w-full rounded-md border-0 bg-white/5 py-1.5  shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                             />
                                         </div>
@@ -320,7 +300,7 @@ export default function UserDashboard() {
                                     <button
                                         type="submit"
                                         className="rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold  shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                                        onClick={(event) => handleChangePassword(event)}
+                                        onClick={(event) => handleSavePasswordForm(event)}
                                     >
                                         Save
                                     </button>
