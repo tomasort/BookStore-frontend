@@ -9,7 +9,7 @@ export default function ErrorPage() {
     console.error(error);
 
     useEffect(() => {
-        if (error?.message === 'User is not logged in') {
+        if (error?.message === 'User is not logged in' || error?.message.includes('401')) {
             console.log("Redirecting to login page");
             // Save the user ID in the session storage
             sessionStorage.removeItem('userId');

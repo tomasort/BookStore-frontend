@@ -1,29 +1,32 @@
-import getCsrfToken from '../getCsrfToken';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
+import authFetch from '@/api/authFetch';
+import { getCsrfToken } from '@/utils';
+import { useUser } from '@/context/UserContext';
 
-const logout = (): void => {
-    sessionStorage.removeItem('userId');
-    sessionStorage.setItem('userStatus', 'loggedOut');
-};
+async function logout() {
+    return authFetch('/api/auth/logout', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': getCsrfToken(),
+        },
+    })
+}
 
 export default function Logout() {
-    const handleLogout = async () => {
-        try {
-            const response = await fetch('/api/auth/logout', {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'X-CSRF-TOKEN': getCsrfToken()
-                }
-            });
-            console.log(response);
-            // Clear user ID from session storage
-            logout();
-            // Redirect to login page or home page
+    const logoutMutation = useMutation({
+        mutationFn: logout,
+        onSuccess: () => {
+            sessionStorage.removeItem('userId');
             window.location.href = '/login';
-        } catch (err: any) {
-            console.error(err.message);
         }
+    })
+
+    const handleLogout = async () => {
+        logoutMutation.mutate();
     };
+
     return (
 
         <button

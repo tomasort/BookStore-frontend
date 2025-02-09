@@ -1,6 +1,9 @@
 import { Outlet } from 'react-router-dom';
 import NavigationBar from '../components/NavigationBar';
 import Footer from '../components/Footer';
+import { CartContext } from '../context/CartContext';
+import { useState } from 'react';
+import { CartItem } from '@/types';
 
 function Root() {
     return (

@@ -19,6 +19,16 @@ export default {
                     DEFAULT: '#A8A8A8',
                     dark: '#3B3B3B',
                 },
+                background: {
+                    light: '#F6F6F6',
+                    DEFAULT: '#FFFFFF',
+                    dark: '#3B3B3B',
+                },
+                foreground: {
+                    light: '#F6F6F6',
+                    DEFAULT: '#2563eb',
+                    dark: '#3B3B3B',
+                },
             },
         },
     },

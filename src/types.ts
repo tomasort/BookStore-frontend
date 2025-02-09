@@ -104,3 +104,22 @@ export interface CartItem {
     book: BookCardData;
     in_stock: boolean;
 }
+
+export interface Review {
+    id: number;
+    user: User;
+    rating: number;
+    comment: string;
+    created_at: string;
+}
+
+interface ReviewCounts {
+    rating: number;
+    count: number;
+}
+export interface ReviewsData {
+    reviews: Review[];
+    total_count: number;
+    average_rating: number;
+    counts: ReviewCounts[];
+}

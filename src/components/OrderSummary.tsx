@@ -1,11 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-export default function OrderSummary({ subtotal, tax, shipping }: { subtotal: number, tax: number, shipping: number }) {
-    const navigate = useNavigate();
+import { useContext } from 'react'
+import { CartContext } from "@/context/CartContext"
 
-    const handleCheckout = (event) => {
-        event.preventDefault();
-        navigate('/checkout');
-    };
+export default function OrderSummary() {
+    const [cartItems] = useContext(CartContext)
+
+    let subtotal = cartItems.reduce((acc, item) => acc + item.book.current_price * item.quantity, 0);
+    let tax = cartItems.reduce((acc, item) => acc + (item.book.current_price * 0.16) * item.quantity, 0);
+    let shipping = 10;
+
     return (
         <>
             <div className="mt-10 sm:ml-32 sm:pl-6">
@@ -32,26 +34,6 @@ export default function OrderSummary({ subtotal, tax, shipping }: { subtotal: nu
                             </div>
                         </dl>
                     </div>
-                </div>
-                <div className="mt-10">
-                    <button
-                        type="submit"
-                        className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50"
-                        onClick={(event) => handleCheckout(event)}
-                    >
-                        Checkout
-                    </button>
-                </div>
-
-
-                <div className="mt-6 text-center text-sm text-gray-500">
-                    <p>
-                        or
-                        <a href="/" className="mx-2 font-medium text-indigo-600 hover:text-indigo-500">
-                            Continue Shopping
-                            <span aria-hidden="true"> &rarr;</span>
-                        </a>
-                    </p>
                 </div>
             </div>
         </>

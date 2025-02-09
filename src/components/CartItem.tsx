@@ -3,10 +3,15 @@ import { CheckIcon, ClockIcon } from '@heroicons/react/20/solid'
 
 const leadTime = 3
 
-export default function CartItem({ item, updateQuantity }: { item: CartItemType, updateQuantity: (bookId: number, quantity: number) => void }) {
+
+interface CartItemProps {
+    item: CartItemType,
+    updateQuantity: (bookId: number, quantity: number) => void
+}
+
+export default function CartItem({ item, updateQuantity }: CartItemProps) {
     return (
         <>
-            {console.log(item)}
             {/* Image Container */}
             <div className="flex-shrink-0">
                 {item.book.cover_url === null ? (
@@ -59,6 +64,7 @@ export default function CartItem({ item, updateQuantity }: { item: CartItemType,
                         <button
                             type="button"
                             className="ml-4 text-sm font-medium text-indigo-600 hover:text-indigo-500 sm:ml-0 sm:mt-3"
+                            onClick={() => updateQuantity(item.book.id, 0)}
                         >
                             <span>Remove</span>
                         </button>
@@ -72,7 +78,6 @@ export default function CartItem({ item, updateQuantity }: { item: CartItemType,
                         ) : (
                             <ClockIcon className="h-5 w-5 flex-shrink-0 text-gray-300" aria-hidden="true" />
                         )}
-
                         <span>{item.in_stock ? 'In stock' : `Ships in ${leadTime}`}</span>
                     </p>
                 }

@@ -14,8 +14,14 @@ import Checkout from "./routes/checkout"
 import UserSidebar from './components/UserSidebar'
 import UserDashboard, { profileLoader } from './routes/user-dashboard'
 import { NotificationProvider } from './context/NotificationContext';
-import Example from './routes/example';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { UserProvider } from './context/UserContext'
+import { CartProvider } from './context/CartContext'
 
+
+
+const queryClient = new QueryClient()
 
 const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
     {
@@ -30,7 +36,7 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             {
                 path: "/book/:bookId",
                 element: <BookPage />,
-                loader: bookLoader,
+                // loader: bookLoader,
             },
             {
                 path: "/login",
@@ -43,7 +49,6 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             {
                 path: "/user-dashboard/",
                 element: <UserDashboard />,
-                loader: profileLoader,
             },
             {
                 path: "/register",
@@ -73,8 +78,16 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
 
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
-        <NotificationProvider>
-            <RouterProvider router={router} />
-        </NotificationProvider>
+        <QueryClientProvider client={queryClient}>
+            <UserProvider>
+                <CartProvider>
+
+                    <NotificationProvider>
+                        <RouterProvider router={router} />
+                    </NotificationProvider>
+                </CartProvider>
+            </UserProvider>
+            <ReactQueryDevtools />
+        </QueryClientProvider >
     </StrictMode>,
 )

@@ -1,67 +1,35 @@
-import getCsrfToken from '../getCsrfToken';
-import { CheckIcon, ClockIcon } from '@heroicons/react/20/solid'
-import { useState, useEffect } from 'react';
-import { CartItem } from '../types';
+import { useState } from 'react';
 import { useNotification } from '../context/NotificationContext';
+import addToCart from '@/api/addToCart';
+import { useMutation } from '@tanstack/react-query';
+import { useNavigate } from "react-router-dom";
 
-
-
-export default function AddToCartButton({ bookId }: { bookId: number }) {
+export default function AddToCartButton({ bookId }: { bookId: number | undefined }) {
+    const navigate = useNavigate();
     const [quantity, setQuantity] = useState(1);
-    const [oldQuantity, setOldQuantity] = useState(0);
     const { showNotification } = useNotification();
-
-    useEffect(() => {
-        // Fetch the current quantity from the cart when the component mounts
-        const fetchCurrentQuantity = async () => {
-            try {
-                const response = await fetch('/api/cart');
-                const json = await response.json();
-                const cartItems: CartItem[] = json['items'];
-                const currentItem: CartItem | undefined = cartItems.find(item => item.book.id === bookId);
-                if (currentItem) {
-                    setQuantity(currentItem.quantity);
-                    setOldQuantity(currentItem.quantity);
-                }
-            } catch (error) {
-                console.error('Error fetching cart:', error);
+    const mutation = useMutation({
+        mutationFn: addToCart,
+        onError: (err) => {
+            if (err.message === 'Unauthorized') {
+                navigate('/login');
+            } else {
+                showNotification('Failed to add to cart');
             }
-        };
-        fetchCurrentQuantity();
-    }, [oldQuantity]);
+        },
+        onSuccess: () => {
+            setQuantity(1);
+            if (quantity > 1) {
+                showNotification(`${quantity} Items added to your cart!`)
+            } else {
+                showNotification('Item added to your cart!')
+            }
+        },
+    });
 
-    const handleAddToCart = async (event) => {
+    const handleAddToCart = async (event: any) => {
         event.preventDefault();
-
-        try {
-            let newQuantity = quantity - oldQuantity;
-            if (newQuantity <= 0) {
-                newQuantity = 1;
-            }
-            const response = await fetch('/api/cart/add', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                },
-                body: JSON.stringify({ book_id: bookId, quantity: newQuantity }),
-            });
-            const json = await response.json();
-            const cartItems: CartItem[] = json['cart']['items'];
-            const currentItem: CartItem | undefined = cartItems.find(item => item.book.id === bookId);
-            if (currentItem) {
-                setQuantity(currentItem.quantity);
-                setOldQuantity(currentItem.quantity);
-            }
-            if (!response.ok) {
-                throw new Error('Failed to add book to cart');
-            }
-            // TODO: show how many items were added to the cart
-            showNotification('Item added to your cart!');
-        } catch (error) {
-            console.error('Error adding book to cart:', error);
-            showNotification('Failed to add book to cart');
-        }
+        mutation.mutate({ bookId: bookId, quantity: quantity });
     };
 
     return (
@@ -71,14 +39,7 @@ export default function AddToCartButton({ bookId }: { bookId: number }) {
                     onClick={(event) => { handleAddToCart(event) }}
                     className="flex max-w-xs flex-1 items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 sm:w-full"
                 >
-                    {oldQuantity > 0 ? (
-                        <span className="flex items-center">
-                            <CheckIcon className="h-5 w-5 flex-shrink-0 text-green-500 mr-2" aria-hidden="true" />
-                            Buy
-                        </span>
-                    ) : (
-                        <span>Buy</span>
-                    )}
+                    <span>Buy</span>
                 </button>
 
                 <div className="ml-4 flex items-center justify-center rounded-md px-3 py-3 text-gray-400 hover:bg-gray-100 hover:text-gray-500">

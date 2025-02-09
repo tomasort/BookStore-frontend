@@ -1,9 +1,9 @@
 import UserSidebar from "../components/UserSidebar";
-import { useState } from "react";
-import { useLoaderData } from "react-router-dom";
-import { User } from "../types";
-import getUserId from "../getUserId";
-import getCsrfToken from "@/getCsrfToken";
+import { useState, useEffect } from "react";
+import updateUserInfo from "@/api/updateUserInfo";
+import { useMutation } from "@tanstack/react-query";
+import updateUserPassword from "@/api/updateUserPassword";
+import { useUser } from "@/context/UserContext";
 
 const DEFAULT_USER_INFO = {
     firstName: 'First Name',
@@ -32,39 +32,67 @@ const secondaryNavigation = [
     { name: 'Integrations', href: '#', current: false },
 ]
 
-export async function profileLoader(): Promise<User> {
-
-    const userId = getUserId();
-    if (!userId) {
-        throw new Error('User is not logged in')
-    }
-    console.log(userId);
-    const response = await fetch(`/api/auth/users/${userId}`);
-    if (!response.ok) {
-        throw new Error(`Failed to fetch user with ID ${userId}. Status: ${response.status}`)
-    }
-    const userData: User = await response.json()
-    return userData
-}
 
 export default function UserDashboard() {
-    const user = useLoaderData() as User;
-    console.log(user);
-
+    const { user, refetchUser } = useUser();
+    const [userInfoUpdated, setUserInfoUpdated] = useState(false);
     const [userInfoFormData, setUserInfoFormData] = useState({
-        firstName: user.first_name || DEFAULT_USER_INFO.firstName,
-        lastName: user.last_name || DEFAULT_USER_INFO.lastName,
-        email: user.email || DEFAULT_USER_INFO.email,
-        username: user.username || DEFAULT_USER_INFO.username,
-        phonenumber: user.phone_number || DEFAULT_USER_INFO.phonenumber,
-        dateOfBirth: user.date_of_birth || DEFAULT_USER_INFO.dateOfBirth,
+        firstName: user?.first_name || DEFAULT_USER_INFO.firstName,
+        lastName: user?.last_name || DEFAULT_USER_INFO.lastName,
+        email: user?.email || DEFAULT_USER_INFO.email,
+        username: user?.username || DEFAULT_USER_INFO.username,
+        phonenumber: user?.phone_number || DEFAULT_USER_INFO.phonenumber,
+        dateOfBirth: user?.date_of_birth || DEFAULT_USER_INFO.dateOfBirth,
     });
-
     const [passwordFormData, setPasswordFormData] = useState({
         current_password: '',
         new_password: '',
         confirm_password: '',
     });
+
+    useEffect(() => {
+        refetchUser();
+        setUserInfoFormData({
+            firstName: user?.first_name || DEFAULT_USER_INFO.firstName,
+            lastName: user?.last_name || DEFAULT_USER_INFO.lastName,
+            email: user?.email || DEFAULT_USER_INFO.email,
+            username: user?.username || DEFAULT_USER_INFO.username,
+            phonenumber: user?.phone_number || DEFAULT_USER_INFO.phonenumber,
+            dateOfBirth: user?.date_of_birth || DEFAULT_USER_INFO.dateOfBirth,
+        });
+    }, [userInfoUpdated, user])
+
+    const mutationUserInfo = useMutation({
+        mutationFn: updateUserInfo,
+        onSuccess: () => {
+            console.log('User info updated successfully');
+            setUserInfoUpdated(true);
+        },
+    })
+
+    const mutationUserPassword = useMutation({
+        mutationFn: updateUserPassword,
+        onSuccess: () => {
+            console.log('User password updated successfully');
+        }
+    })
+
+    const handleSaveUserInfo = async (e) => {
+        e.preventDefault();
+        console.log('Saving user info');
+        mutationUserInfo.mutate({ userId: user?.id, formData: userInfoFormData });
+    }
+
+    const handleSavePasswordForm = async (e) => {
+        e.preventDefault();
+        console.log('Changing password info');
+        if (passwordFormData.new_password !== passwordFormData.confirm_password) {
+            // TODO: show error message 
+            console.error('Passwords do not match');
+            return;
+        }
+        mutationUserPassword.mutate({ userId: user?.id, passwordFormData: passwordFormData });
+    }
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
         const fieldName = e.target.name;
@@ -94,28 +122,6 @@ export default function UserDashboard() {
         }));
     };
 
-    const handleSaveUserInfo = async (e) => {
-        e.preventDefault();
-        console.log('Saving user info');
-        console.log(user)
-        const response = await fetch(`/api/auth/users/${user.id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken(),
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                first_name: userInfoFormData.firstName,
-                last_name: userInfoFormData.lastName,
-                email: userInfoFormData.email,
-                username: userInfoFormData.username,
-                phone_number: userInfoFormData.phonenumber,
-                date_of_birth: userInfoFormData.dateOfBirth,
-            }),
-        });
-    }
-
     const handleChangePasswordForm = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
         setPasswordFormData((prev) => ({
@@ -123,29 +129,6 @@ export default function UserDashboard() {
             [name]: value,
         }));
     };
-
-    const handleSavePasswordForm = async (e) => {
-        e.preventDefault();
-        console.log('Changing password info');
-        // check that the new password and confirm password match
-        if (passwordFormData.new_password !== passwordFormData.confirm_password) {
-            console.error('Passwords do not match');
-            return;
-        }
-        const response = await fetch(`/api/auth/users/${user.id}/password`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': getCsrfToken(),
-            },
-            credentials: 'include',
-            body: JSON.stringify({
-                current_password: passwordFormData.current_password,
-                new_password: passwordFormData.new_password,
-            }),
-        });
-        console.log(response);
-    }
 
     if (!user) return <p>Loading User details...</p>;
 
@@ -155,7 +138,7 @@ export default function UserDashboard() {
             <UserSidebar />
 
             <div className="xl:col-span-3">
-                <main>
+                <div>
                     <header className="border-b border-white/5">
                         {/* Secondary navigation */}
                         <nav className="flex overflow-x-auto py-4">
@@ -308,7 +291,7 @@ export default function UserDashboard() {
                             </form>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
         </div>
     )

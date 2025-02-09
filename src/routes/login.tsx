@@ -1,6 +1,11 @@
+import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import SocialLogin from '../components/SocialLogin';
 import AuthFormHeader from '../components/AuthFormHeader';
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '@/context/UserContext';
+import login from '@/api/login';
+
 
 
 function Login() {
@@ -10,49 +15,33 @@ function Login() {
         rememberMe: false
     });
     const [error, setError] = useState('');
+    const navigate = useNavigate();
+    const { setUserId } = useUser();
 
-    const handleInputChange = (e: any) => {
-        const { name, value, type, checked } = e.target;
-        setFormData(prev => ({
-            ...prev,
-            [name]: type === 'checkbox' ? checked : value
-        }));
-    };
+    const mutation = useMutation({
+        mutationFn: login,
+        onSuccess: (data) => {
+            sessionStorage.setItem('userId', data.user_id);
+            setUserId(data.user_id);
+            navigate('/user-dashboard');
+        },
+        onError: (error) => {
+            setError(error.message);
+        }
+    })
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        try {
-            const response = await fetch('api/auth/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    username: formData.username,
-                    password: formData.password
-                }),
-                credentials: 'include'
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
-            }
-            const userId = data.user_id;
-
-            // Save the user ID in the session storage
-            sessionStorage.setItem('userId', userId);
-            sessionStorage.setItem('userStatus', 'loggedIn');
-
-            // Handle successful login
-            window.location.href = `/user-dashboard`; // Or use router navigation
-        } catch (err: any) {
-            setError(err.message);
-        }
+        mutation.mutate(formData);
     };
+
+    const handleInputChange = (e: any) => {
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
+    };
+
     return (
-        <div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8">
+        < div className="flex min-h-full flex-1 flex-col justify-center py-12 sm:px-6 lg:px-8" >
 
             <AuthFormHeader message="Sign in to your account" />
 
@@ -140,7 +129,7 @@ function Login() {
                     </a>
                 </p>
             </div>
-        </div>
+        </div >
     )
 }
 

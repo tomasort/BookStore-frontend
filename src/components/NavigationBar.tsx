@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 import getUserId from '../getUserId';
 import Logout from './Logout';
+import { useUser } from '@/context/UserContext';
 
 function NavigationBar() {
-
-
+    const { userId } = useUser();
     return (
         <div className="bg-primary text-white shadow-md">
             <div className="p-4 container mx-auto flex justify-between items-center">
@@ -54,7 +54,7 @@ function NavigationBar() {
                             </Link>
                         </li>
                         <li>
-                            {getUserId() ? (
+                            {userId ? (
                                 <Logout />
                             ) : (
                                 <Link
@@ -66,7 +66,7 @@ function NavigationBar() {
                             )}
                         </li>
                         <li>
-                            {getUserId() ? (
+                            {userId ? (
                                 <Link
                                     to="/user-dashboard"
                                     className="hover:text-primary-light font-medium transition duration-300"

@@ -22,11 +22,7 @@ const HomePage: React.FC = () => {
                 </div>
             </section>
 
-            {/* Featured Books Section */}
-
             <FeaturedCarousel />
-
-
 
             {/* About Section */}
             <section className="bg-gray-200 py-16">

@@ -1,11 +1,31 @@
 import { useEffect, useState } from 'react';
 import BookCard from '../components/BookCard';
 import Pagination from '../components/Pagination';
-import { BookData } from '../types';
+import { BookCardData } from '../types';
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+
+
+interface PaginationData {
+    has_next: boolean,
+    has_prev: boolean,
+    page: number,
+    pages: number,
+    per_page: number,
+    total: number
+}
+
+interface GetBooksResponse {
+    books: BookCardData[],
+    pagination: PaginationData
+}
+
 
 function Popular() {
-    const [books, setBooks] = useState<BookData[]>([]);
-    const [pagination, setPagination] = useState({
+    async function getBooks(pagination: PaginationData): Promise<GetBooksResponse> {
+        return fetch(`/api/api/books?page=${pagination.page}&limit=${pagination.per_page}`).then(response => response.json());
+    }
+    const [books, setBooks] = useState<BookCardData[]>([]);
+    const [pagination, setPagination] = useState<PaginationData>({
         has_next: false,
         has_prev: false,
         page: 1,
@@ -13,39 +33,41 @@ function Popular() {
         per_page: 10,
         total: 0
     });
-    const [loading, setLoading] = useState(false);
 
-    async function getBooks(page: number) {
-        setLoading(true);
-        try {
-            const response = await fetch(`/api/api/books?page=${page}`);
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            const response_data = await response.json();
-            setBooks(response_data.books);
-            setPagination(response_data.pagination);
-        } catch (error) {
-            console.error('Error fetching books:', error);
-        } finally {
-            setLoading(false);
-        }
-    }
+    const query = useQuery({
+        queryKey: ['books', pagination],
+        queryFn: () => getBooks(pagination),
+        placeholderData: keepPreviousData
+    })
 
     useEffect(() => {
-        getBooks(pagination.page);
-    }, []);
+        if (query.data?.books && query.data?.pagination) {
+            setBooks(query.data.books);
+            setPagination(query.data.pagination);
+        }
+    }, [query.data]);
 
     function handlePageChange(newPage: number) {
         if (newPage > 0 && newPage <= pagination.pages) {
-            getBooks(newPage);
+            setPagination({ ...pagination, page: newPage });
         }
     }
 
     return (
         <div className="container mx-auto p-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Popular Books</h2>
-            {loading ? (
+            <select
+                id="perPage"
+                name="perPage"
+                className="block max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
+                value={pagination.per_page}
+                onChange={(event) => setPagination({ ...pagination, per_page: parseInt(event.target.value, 10) })}
+            >
+                {[10, 20, 30].map((num) => (
+                    <option key={num} value={num}>{num}</option>
+                ))}
+            </select>
+            {query.isLoading || query.isPending ? (
                 <p>Loading...</p>
             ) : (
                 <>
