@@ -1,10 +1,19 @@
 export interface Author {
     id: number;
     name: string;
-    photo_url: string | null;
+    photo_url?: string | null;
+    biography?: string | null;
+    birth_date?: string | null;
+    death_date?: string | null;
+    books?: Book[];
 }
 
 export interface Genre {
+    id: number;
+    name: string;
+}
+
+export interface Language {
     id: number;
     name: string;
 }
@@ -14,58 +23,53 @@ export interface Publisher {
     name: string;
 }
 
-export interface BookDetailsData {
+export interface Series {
     id: number;
-    title: string;
-    subtitle: string | null;
-    authors: Author[];
-    description: string | null;
-    cover_url: string | null;
-    genres: Genre[];
-    publishers: Publisher[];
-    average_cost_alejandria: string | null;
-    bar_code_alejandria: string | null;
-    code_alejandria: string;
-    cost: string;
-    cost_supplier: string | null;
-    current_price: string;
-    previous_price: string | null;
-    price_alejandria: string | null;
-    iva: string | null;
-    last_cost_alejandria: string | null;
-    stock: number;
-    stock_alejandria: number;
-    stock_consig: number;
-    stock_consig_alejandria: number;
-    isbn_10: string | null;
-    isbn_13: string | null;
-    isbn_alejandria: string | null;
-    number_of_pages: number | null;
-    physical_format: string | null;
-    physical_dimensions: string | null;
-    weight: string | null;
-    publish_date: string | null;
-    publish_places: string[]; // Array of place names
-    series: string[]; // Array of series names
-    rating: number | null;
-    edition_name: string | null;
-    languages: string[]; // Array of language names
+    name: string;
 }
 
-export interface BookCardData {
+export interface Book {
+    // Core book properties - always required
     id: number;
     title: string;
-    subtitle: string | null;
-    isbn_10: string | null;
-    isbn_13: string | null;
-    authors: Author[];
-    series: string[];
-    publishers: Publisher[];
-    genres: Genre[];
-    previous_price: number | null;
-    current_price: number;
-    cover_url: string | null;
-    rating: number | null;
+
+    // Common book properties - sometimes optional
+    subtitle?: string | null;
+    authors?: Author[];
+    cover_url?: string | null;
+    genres?: Genre[];
+    publishers?: Publisher[];
+    isbn_10?: string | null;
+    isbn_13?: string | null;
+    series?: Series[] | string[];
+    rating?: number | null;
+
+    // Card-specific properties
+    previous_price?: number | string | null;
+    current_price?: number | string;
+
+    // Details-specific properties
+    description?: string | null;
+    average_cost_alejandria?: string | null;
+    bar_code_alejandria?: string | null;
+    code_alejandria?: string;
+    cost?: string;
+    cost_supplier?: string | null;
+    iva?: string | null;
+    last_cost_alejandria?: string | null;
+    stock?: number;
+    stock_alejandria?: number;
+    stock_consig?: number;
+    stock_consig_alejandria?: number;
+    isbn_alejandria?: string | null;
+    number_of_pages?: number | null;
+    physical_format?: string | null;
+    physical_dimensions?: string | null;
+    weight?: string | null;
+    publish_date?: string | null;
+    publish_places?: string[];
+    edition_name?: string | null;
+    languages?: Language[];
 }
 
 export interface User {
@@ -101,7 +105,7 @@ export interface User {
 export interface CartItem {
     id: number;
     quantity: number;
-    book: BookCardData;
+    book: Book;
     in_stock: boolean;
 }
 
@@ -122,4 +126,13 @@ export interface ReviewsData {
     total_count: number;
     average_rating: number;
     counts: ReviewCounts[];
+}
+
+export interface PaginationData {
+    has_next: boolean,
+    has_prev: boolean,
+    page: number,
+    pages: number,
+    per_page: number,
+    total: number
 }

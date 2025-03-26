@@ -23,6 +23,7 @@ const BookPage: FC = () => {
     })
 
     if (!bookId) return <p>Loading book details...</p>;
+    console.log('bookId', bookId);
 
     return (
         <div className="max-w-6xl mx-auto p-6 bg-white shadow-lg rounded-lg overflow-hidden">
@@ -49,7 +50,7 @@ const BookPage: FC = () => {
                     </button>
                 )
             }
-            <RelatedProducts />
+            <RelatedProducts bookId={bookId} />
             <BookReviews bookId={bookId} setAverageRating={setAverageRating} setReviewsCount={setReviewsCount} />
         </div >
     );

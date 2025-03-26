@@ -10,7 +10,7 @@ function NavigationBar() {
         <div className="bg-primary text-white shadow-md">
             <div className="p-4 container mx-auto flex justify-between items-center">
                 {/* Logo / Brand */}
-                <h1 className="text-2xl font-bold">
+                <h1 className="text-2xl font-bold flex-shrink-0 w-auto">
                     <Link to="/" className="hover:text-primary-light">Book Store!</Link>
                 </h1>
 
@@ -20,15 +20,7 @@ function NavigationBar() {
                 {/* Navigation Links */}
 
                 <nav>
-                    <ul className="flex space-x-6">
-                        <li>
-                            <Link
-                                to="/"
-                                className="hover:text-primary-light font-medium transition duration-300"
-                            >
-                                Home
-                            </Link>
-                        </li>
+                    <ul className="flex space-x-4">
                         <li>
                             <Link
                                 to="/search/popular"
@@ -43,14 +35,6 @@ function NavigationBar() {
                                 className="hover:text-primary-light font-medium transition duration-300"
                             >
                                 Latest
-                            </Link>
-                        </li>
-                        <li>
-                            <Link
-                                to="/about"
-                                className="hover:text-primary-light font-medium transition duration-300"
-                            >
-                                About
                             </Link>
                         </li>
                         <li>

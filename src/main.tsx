@@ -2,7 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom'
 import './index.css'
-import BookPage, { bookLoader } from './routes/book-page'
+import BookPage from './routes/book-page'
+import AuthorPage from './routes/author-page'
 import Root from "./routes/root"
 import Popular from "./routes/popular"
 import ErrorPage from "./error-page"
@@ -11,6 +12,7 @@ import Login from "./routes/login"
 import Cart from "./routes/cart"
 import Register from "./routes/register"
 import Checkout from "./routes/checkout"
+import SearchResults from './routes/search-results'
 import UserSidebar from './components/UserSidebar'
 import UserDashboard, { profileLoader } from './routes/user-dashboard'
 import { NotificationProvider } from './context/NotificationContext';
@@ -36,7 +38,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
             {
                 path: "/book/:bookId",
                 element: <BookPage />,
-                // loader: bookLoader,
+            },
+            {
+                path: "/author/:authorId",
+                element: <AuthorPage />,
             },
             {
                 path: "/login",
@@ -70,6 +75,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
                         path: "/search/popular",
                         element: <Popular />,
                     },
+                    {
+                        path: "/search/results",
+                        element: <SearchResults />,
+                    }
                 ]
             },
         ]

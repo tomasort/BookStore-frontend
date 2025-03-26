@@ -1,10 +1,12 @@
 import AddToCartButton from "./AddToCartButton";
 import { StarIcon } from '@heroicons/react/20/solid';
 import { HeartIcon, } from '@heroicons/react/24/outline'
-import { BookDetailsData } from "@/types";
+import { Book } from "@/types";
+import { getImageUrl } from "@/utils";
+import { Link } from "react-router-dom";
 
 interface BookDetailsProps {
-    bookData: BookDetailsData | undefined;
+    bookData: Book | undefined;
     averageRating: number;
     reviewsCount: number;
 }
@@ -26,7 +28,7 @@ const BookDetails = ({ bookData, averageRating, reviewsCount }: BookDetailsProps
                         </div>
                     ) : (
                         <img
-                            src={`/images${bookData?.cover_url}`}
+                            src={getImageUrl(bookData?.cover_url)}
                             alt={`Cover of ${bookData?.title}`}
                             className="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
                         />
@@ -40,7 +42,12 @@ const BookDetails = ({ bookData, averageRating, reviewsCount }: BookDetailsProps
                     <p className="text-lg text-gray-600 mb-4">by {
                         bookData?.authors.map((author, index) => (
                             <span key={author.id}>
-                                {author.name}
+                                <Link
+                                    to={`/author/${author.id}`}
+                                    className="text-blue-500 hover:underline"
+                                >
+                                    {author.name}
+                                </Link>
                                 {index < bookData?.authors.length - 1 ? ', ' : ''}
                             </span>
                         ))
@@ -87,7 +94,7 @@ const BookDetails = ({ bookData, averageRating, reviewsCount }: BookDetailsProps
                             <p><strong>Weight:</strong> {bookData?.weight}</p>
                             <p><strong>Publish Date:</strong> {bookData?.publish_date}</p>
                             <p><strong>Publish Places:</strong> {bookData?.publish_places.join(', ')}</p>
-                            <p><strong>Languages:</strong> {bookData?.languages.join(', ')}</p>
+                            <p><strong>Languages:</strong> {bookData?.languages.map(lang => lang.name).join(', ')}</p>
                         </div>
                         <div>
                             <h3 className="text-xl font-semibold text-gray-800">Genres</h3>
@@ -95,7 +102,7 @@ const BookDetails = ({ bookData, averageRating, reviewsCount }: BookDetailsProps
                             <h3 className="text-xl font-semibold text-gray-800 mt-4">Publishers</h3>
                             <p>{bookData?.publishers.map(publisher => publisher.name).join(', ')}</p>
                             <h3 className="text-xl font-semibold text-gray-800 mt-4">Series</h3>
-                            <p>{bookData?.series.join(', ')}</p>
+                            <p>{bookData?.series.map(s => s.name).join(', ')}</p>
                         </div>
                     </div>
                 </div>

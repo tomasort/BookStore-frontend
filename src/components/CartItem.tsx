@@ -1,5 +1,6 @@
 import { CartItem as CartItemType } from "../types"
 import { CheckIcon, ClockIcon } from '@heroicons/react/20/solid'
+import { getImageUrl } from "../utils"
 
 const leadTime = 3
 
@@ -20,7 +21,7 @@ export default function CartItem({ item, updateQuantity }: CartItemProps) {
                     </div>
                 ) : (
                     <img
-                        src={`/images${item.book.cover_url}`}
+                        src={getImageUrl(item.book.cover_url)}
                         alt={`Cover of ${item.book.title}`}
                         className="h-24 w-24 rounded-lg object-cover object-center sm:h-32 sm:w-32"
                     />

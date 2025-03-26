@@ -1,3 +1,4 @@
+import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import BookCard from '../components/BookCard';
 import Pagination from '../components/Pagination';
@@ -5,23 +6,26 @@ import { Book, PaginationData } from '../types';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
 
 
+
 interface GetBooksResponse {
-    books: Book[],
-    pagination: PaginationData
+    books: Book[];
+    pagination: PaginationData;
 }
 
 
-function Popular() {
-    async function getBooks(page: number, perPage: number): Promise<GetBooksResponse> {
-        return fetch(`/api/api/books?page=${page}&limit=${perPage}`).then(response => response.json());
+function SearchResults() {
+    async function getSearchResults(query: string, page: number, perPage: number): Promise<GetBooksResponse> {
+        return fetch(`/api/api/books/search?keyword=${query}&page=${page}&limit=${perPage}`).then(response => response.json());
     }
-    // const [books, setBooks] = useState<BookCardData[]>([]);
+
+    const [searchParams] = useSearchParams();
+    const query = searchParams.get('q') || '';
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
 
     const { data, isFetching } = useQuery({
-        queryKey: ['books', page, perPage],
-        queryFn: () => getBooks(page, perPage),
+        queryKey: ['search', page, perPage, query],
+        queryFn: () => getSearchResults(query, page, perPage),
         placeholderData: keepPreviousData
     })
 
@@ -33,7 +37,7 @@ function Popular() {
 
     return (
         <div className="container mx-auto p-6">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">Popular Books</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Search Results: {query}</h2>
             <select
                 id="perPage"
                 name="perPage"
@@ -50,11 +54,11 @@ function Popular() {
             ) : (
                 <>
                     {/* Grid of books */}
-                    {data?.books.length === 0 ? (
+                    {data && data.books?.length === 0 ? (
                         <p>No books found</p>
                     ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-                            {data?.books && data.books.map((book) => (
+                            {data && data.books.map((book) => (
                                 <BookCard
                                     key={book.id}
                                     id={book.id}
@@ -81,5 +85,5 @@ function Popular() {
     );
 }
 
-export default Popular;
+export default SearchResults;
 

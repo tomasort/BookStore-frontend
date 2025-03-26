@@ -1,7 +1,8 @@
-import { BookCardData } from '../types';
+import { Book } from '../types';
 import AddToCartButton from './AddToCartButton';
+import { getImageUrl } from '../utils';
 
-export default function BookCard({ id, cover_url, title, authors, current_price }: BookCardData) {
+export default function BookCard({ id, cover_url, title, authors, current_price }: Book) {
 
     const handleClick = () => {
         // Navigate to the book's URL
@@ -29,7 +30,7 @@ export default function BookCard({ id, cover_url, title, authors, current_price 
                         </div>
                     ) : (
                         <img
-                            src={`/images${cover_url}`}
+                            src={getImageUrl(cover_url)}
                             alt={`Cover of ${title}`}
                             className="w-full h-full object-cover group-hover:opacity-75 transition-opacity"
                         />

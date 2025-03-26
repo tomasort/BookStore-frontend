@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, ChangeEvent, FormEvent } from "react";
-import { BookDetailsData } from "@/types";
+import { Book } from "@/types";
 import { StarIcon } from "@heroicons/react/20/solid";
 import AuthorDetailsForm from "./AuthorDetailsForm";
+import { getImageUrl } from "@/utils";
 import {
     Dialog,
     DialogContent,
@@ -14,11 +15,11 @@ import {
 import AddAuthorForm from "./AddAuthorForm";
 
 interface EditBookDetailsProps {
-    bookData: BookDetailsData;
+    bookData: Book;
 }
 
 const EditBookDetails = ({ bookData }: EditBookDetailsProps) => {
-    const [formData, setFormData] = useState<BookDetailsData>(bookData);
+    const [formData, setFormData] = useState<Book>(bookData);
     const descriptionRef = useRef<HTMLTextAreaElement>(null);
 
     const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -26,7 +27,7 @@ const EditBookDetails = ({ bookData }: EditBookDetailsProps) => {
         setFormData((prev) => ({ ...prev, [name]: value }));
     };
 
-    const handleArrayChange = (e: ChangeEvent<HTMLInputElement>, key: keyof BookDetailsData) => {
+    const handleArrayChange = (e: ChangeEvent<HTMLInputElement>, key: keyof Book) => {
         const valueArray = e.target.value.split(",").map((item) => item.trim());
         setFormData((prev) => ({ ...prev, [key]: valueArray }));
     };
@@ -55,7 +56,7 @@ const EditBookDetails = ({ bookData }: EditBookDetailsProps) => {
                     <DialogTrigger asChild>
                         <button className="relative w-full">
                             {formData.cover_url ? (
-                                <img src={`/images${formData.cover_url}`} alt={`Cover of ${formData.title}`} className="w-full h-full object-cover" />
+                                <img src={getImageUrl(formData.cover_url)} alt={`Cover of ${formData.title}`} className="w-full h-full object-cover" />
                             ) : (
                                 <div className="w-full h-full flex items-center justify-center bg-gray-100">
                                     <span className="text-gray-400">Image not available</span>
@@ -69,7 +70,7 @@ const EditBookDetails = ({ bookData }: EditBookDetailsProps) => {
                             <DialogDescription>
                                 <div className="relative w-full">
                                     {formData.cover_url ? (
-                                        <img src={`/images${formData.cover_url}`} alt={`Cover of ${formData.title}`} className="w-full h-full object-cover" />
+                                        <img src={getImageUrl(formData.cover_url)} alt={`Cover of ${formData.title}`} className="w-full h-full object-cover" />
                                     ) : (
                                         <div className="w-full h-full flex items-center justify-center bg-gray-100">
                                             <span className="text-gray-400">Image not available</span>
