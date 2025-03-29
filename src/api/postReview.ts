@@ -1,3 +1,4 @@
+import authFetch from "./authFetch";
 import getCsrfToken from "@/getCsrfToken"
 
 interface PostReviewParams {
@@ -8,10 +9,7 @@ interface PostReviewParams {
 
 
 export default async function postReview({ bookId, rating, review }: PostReviewParams) {
-    if (sessionStorage.getItem('userStatus') != 'loggedIn') {
-        throw new Error('Unauthorized')
-    }
-    const response = await fetch(`/api/api/reviews/${bookId}`, {
+    const response = await authFetch(`/api/api/reviews/${bookId}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -21,10 +19,9 @@ export default async function postReview({ bookId, rating, review }: PostReviewP
             rating: rating,
             comment: review,
         }),
-        credentials: 'include',
     })
     if (!response.ok) {
-        const { message } = await response.json()
+        const { message } = await response.json();
         throw new Error(message)
     }
     return response.json();
