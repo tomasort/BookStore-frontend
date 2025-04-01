@@ -1,49 +1,12 @@
-import { useQuery, useMutation } from "@tanstack/react-query"
-import { useEffect } from 'react'
-import getCart from "../api/getCart"
-import updateCart from "../api/updateCart"
 import CartItem from "./CartItem"
-import { getCsrfToken } from "@/utils"
 import { useCart } from "@/context/CartContext"
 
 export default function Cart() {
-    const [cartItems, setCartItems] = useCart();
-    const { data, isLoading } = useQuery({
-        queryKey: ['cart'],
-        queryFn: getCart,
-    })
-    const updateQuantityMutation = useMutation({
-        mutationFn: updateCart,
-        onSuccess: (data) => {
-            setCartItems(data?.cart.items);
-        }
-    })
-    const clearCartMutation = useMutation({
-        mutationFn: () => {
-            return fetch('/api/cart', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                },
-            });
-        },
-        onSuccess: () => {
-            setCartItems([]);
-        }
-    })
-    async function updateQuantity(bookId: number, quantity: number) {
-        updateQuantityMutation.mutate({ book_id: bookId, quantity: quantity });
-    }
+    const { cartItems, isLoading, clearCart, updateQuantity } = useCart();
     async function handleClearCart(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
-        clearCartMutation.mutate();
+        clearCart();
     }
-    useEffect(() => {
-        if (data) {
-            setCartItems(data.items)
-        }
-    }, [data])
     if (isLoading) {
         return <div>Loading...</div>
     }

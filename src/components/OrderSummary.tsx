@@ -1,8 +1,9 @@
 import { useContext } from 'react'
 import { CartContext } from "@/context/CartContext"
+import { useCart } from "@/context/CartContext"
 
 export default function OrderSummary() {
-    const [cartItems] = useContext(CartContext)
+    const { cartItems, isLoading, clearCart, updateQuantity } = useCart();
 
     let subtotal = cartItems.reduce((acc, item) => acc + item.book.current_price * item.quantity, 0);
     let tax = cartItems.reduce((acc, item) => acc + (item.book.current_price * 0.16) * item.quantity, 0);
