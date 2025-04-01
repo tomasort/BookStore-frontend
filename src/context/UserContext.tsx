@@ -5,21 +5,15 @@ import getUserId from '@/getUserId';
 import getUser from '@/api/getUser';
 import { useQuery } from '@tanstack/react-query';
 
-interface UserContextType {
-    user: User | null,
-    setUser: Dispatch<SetStateAction<User | null>>,
-    userId: string | null,
-    setUserId: Dispatch<SetStateAction<string | null>>,
-    refetchUser: () => void,
+type UserContextType = {
+    user: User;
+    setUser: Dispatch<SetStateAction<User>>;
+    userId: string;
+    setUserId: Dispatch<SetStateAction<string>>;
+    refetchUser: () => void;
 }
 
-const UserContext = createContext<UserContextType>({
-    user: null,
-    setUser: () => { },
-    userId: null,
-    setUserId: () => { },
-    refetchUser: () => { },
-});
+const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: any }) {
     const [user, setUser] = useState<User | null>(null);
@@ -49,3 +43,11 @@ export function UserProvider({ children }: { children: any }) {
 }
 
 export const useUser = () => useContext(UserContext);
+
+// export const useCart = () => {
+//     const context = useContext(CartContext);
+//     if (!context) {
+//         throw new Error('useCart must be used within a CartProvider');
+//     }
+//     return context;
+// }

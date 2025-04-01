@@ -1,8 +1,6 @@
 import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
 import authFetch from '@/api/authFetch';
 import { getCsrfToken } from '@/utils';
-import { useUser } from '@/context/UserContext';
 
 async function logout() {
     return authFetch('/api/auth/logout', {

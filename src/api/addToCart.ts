@@ -2,7 +2,7 @@ import { getCsrfToken } from "@/utils";
 import { CartItem } from "@/types";
 
 interface AddToCartParams {
-    bookId: number | undefined;
+    bookId: number;
     quantity: number;
 }
 

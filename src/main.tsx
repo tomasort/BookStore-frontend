@@ -88,15 +88,15 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <QueryClientProvider client={queryClient}>
-            <UserProvider>
-                <CartProvider>
+            <NotificationProvider>
+                <UserProvider>
+                    <CartProvider>
 
-                    <NotificationProvider>
                         <RouterProvider router={router} />
-                    </NotificationProvider>
-                </CartProvider>
-            </UserProvider>
-            <ReactQueryDevtools />
+                    </CartProvider>
+                </UserProvider>
+                <ReactQueryDevtools />
+            </NotificationProvider>
         </QueryClientProvider >
     </StrictMode>,
 )

@@ -1,35 +1,13 @@
+import { useCart } from '@/context/CartContext';
 import { useState } from 'react';
-import { useNotification } from '../context/NotificationContext';
-import addToCart from '@/api/addToCart';
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from "react-router-dom";
 
-export default function AddToCartButton({ bookId }: { bookId: number | undefined }) {
-    const navigate = useNavigate();
+export default function AddToCartButton({ bookId }: { bookId: number }) {
     const [quantity, setQuantity] = useState(1);
-    const { showNotification } = useNotification();
-    const mutation = useMutation({
-        mutationFn: addToCart,
-        onError: (err) => {
-            if (err.message === 'Unauthorized') {
-                navigate('/login');
-            } else {
-                showNotification('Failed to add to cart');
-            }
-        },
-        onSuccess: () => {
-            setQuantity(1);
-            if (quantity > 1) {
-                showNotification(`${quantity} Items added to your cart!`)
-            } else {
-                showNotification('Item added to your cart!')
-            }
-        },
-    });
+    const { addToCart } = useCart();
 
     const handleAddToCart = async (event: any) => {
         event.preventDefault();
-        mutation.mutate({ bookId: bookId, quantity: quantity });
+        addToCart(bookId, quantity);
     };
 
     return (

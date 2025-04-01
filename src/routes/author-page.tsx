@@ -1,11 +1,7 @@
 import { useParams } from "react-router";
 import { useState } from 'react';
 import { FC } from 'react';
-import BookDetails from '@/components/BookDetails';
-import RelatedProducts from '@/components/RelatedBooks';
-import BookReviews from '@/components/BookReviews';
 import { useUser } from "@/context/UserContext";
-import EditAuthorDetails from "@/components/EditBookDetails";
 import getAuthor from "@/api/getAuthor";
 import { useQuery } from "@tanstack/react-query";
 import { Author } from '@/types';
@@ -70,8 +66,6 @@ const AuthorPage: FC = () => {
     //         <BookReviews bookId={bookId} setAverageRating={setAverageRating} setReviewsCount={setReviewsCount} />
     //     </div >
     // );
-
-    return <div>Author Page</div>
 };
 
 interface AuthorDetailsProps {

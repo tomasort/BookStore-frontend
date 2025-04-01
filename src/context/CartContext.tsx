@@ -1,4 +1,6 @@
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useNotification } from '../context/NotificationContext';
+import addToCart from '../api/addToCart';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getCsrfToken } from "@/utils"
 import updateCart from "../api/updateCart"
 import getCart from '@/api/getCart';
@@ -11,12 +13,15 @@ type CartContextType = {
     isLoading: boolean;
     updateQuantity: (bookId: number, quantity: number) => void;
     clearCart: () => void;
+    addToCart: (bookId: number, quantity: number) => void;
 }
 
 export const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export function CartProvider({ children }: { children: any }) {
     const [cartItems, setCartItems] = useState([] as CartItem[])
+    const { showNotification } = useNotification();
+    const queryClient = useQueryClient()
 
     // Use React Query to fetch cart data
     const { data, isLoading } = useQuery({
@@ -62,12 +67,37 @@ export function CartProvider({ children }: { children: any }) {
         clearCartMutation.mutate();
     };
 
+    const addToCartMutation = useMutation({
+        mutationFn: addToCart,
+        onError: (err) => {
+            if (err.message === 'Unauthorized') {
+                window.location.href = '/login';
+            } else {
+                showNotification('Failed to add to cart');
+            }
+        },
+        onSuccess: (_, variables) => {
+            const { quantity } = variables;
+            if (quantity > 1) {
+                showNotification(`${quantity} Items added to your cart!`)
+            } else {
+                showNotification('Item added to your cart!')
+            }
+            queryClient.invalidateQueries({ queryKey: ['cart'] });
+        },
+    });
+
+    const addBookToCart = (bookId: number, quantity: number) => {
+        addToCartMutation.mutate({ bookId: bookId, quantity: quantity });
+    };
+
     // The actual context value we're providing
     const cartContextValue: CartContextType = {
         cartItems: cartItems,
         isLoading: isLoading,
         updateQuantity: updateQuantity,
         clearCart: clearCart,
+        addToCart: addBookToCart,
     };
 
     return (
