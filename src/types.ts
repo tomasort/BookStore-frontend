@@ -46,7 +46,7 @@ export interface Book {
 
     // Card-specific properties
     previous_price?: number | string | null;
-    current_price?: number | string;
+    current_price?: number;
 
     // Details-specific properties
     description?: string | null;
