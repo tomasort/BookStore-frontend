@@ -1,6 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
 import { useCart } from "@/context/CartContext";
-import updateCart from "../api/updateCart";
 import { useState, useEffect } from "react";
 import CheckoutForm from "../components/CheckoutForm";
 import CheckoutOrderSummary from "../components/CheckoutOrderSummary";
@@ -14,17 +12,10 @@ function calculateTaxes(subtotal: number) {
 }
 
 export default function Checkout() {
-    const [cartItems, setCartItems] = useCart();
+    const { cartItems, updateQuantity } = useCart();
     const [discounts, setDiscounts] = useState(null);
     const [total, setTotal] = useState(0);
     const [shipping, setShipping] = useState(calculateShipping());
-
-    const updateQuantityMutation = useMutation({
-        mutationFn: updateCart,
-        onSuccess: (data) => {
-            setCartItems(data?.cart.items);
-        },
-    });
 
     const subtotal = cartItems.reduce(
         (acc, item) =>
@@ -39,9 +30,6 @@ export default function Checkout() {
         setTotal(subtotal + taxes + shipping);
     }, [subtotal, taxes, shipping]);
 
-    async function updateQuantity(bookId: number, quantity: number) {
-        updateQuantityMutation.mutate({ book_id: bookId, quantity: quantity });
-    }
 
     return (
         <>
