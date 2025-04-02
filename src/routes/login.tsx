@@ -1,12 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import SocialLogin from '../components/SocialLogin';
 import AuthFormHeader from '../components/AuthFormHeader';
-import { useNavigate } from 'react-router-dom';
 import { useUser } from '@/context/UserContext';
-import login from '@/api/login';
-
-
 
 function Login() {
     const [formData, setFormData] = useState({
@@ -14,25 +9,12 @@ function Login() {
         password: '',
         rememberMe: false
     });
-    const [error, setError] = useState('');
-    const navigate = useNavigate();
-    const { setUserId } = useUser();
 
-    const mutation = useMutation({
-        mutationFn: login,
-        onSuccess: (data) => {
-            sessionStorage.setItem('userId', data.user_id);
-            setUserId(data.user_id);
-            navigate('/user-dashboard');
-        },
-        onError: (error) => {
-            setError(error.message);
-        }
-    })
+    const { login, error } = useUser();
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
-        mutation.mutate(formData);
+        login(formData);
     };
 
     const handleInputChange = (e: any) => {

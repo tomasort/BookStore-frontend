@@ -1,7 +1,7 @@
 import authFetch from './authFetch';
 import { User } from '../types';
 
-export default async function getUser({ userId }: { userId: number | null | string }): Promise<User> {
+export default async function getUser(userId: number | undefined | string | null): Promise<User> {
     console.log('Fetching user with ID', userId);
     if (!userId) {
         throw new Error('No user ID provided');

@@ -1,7 +1,7 @@
 import { useNotification } from '../context/NotificationContext';
 import addToCart from '../api/addToCart';
+import clearCart from '../api/clearCart';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getCsrfToken } from "@/utils"
 import updateCart from "../api/updateCart"
 import getCart from '@/api/getCart';
 import { useState, useEffect, useContext } from 'react';
@@ -49,23 +49,11 @@ export function CartProvider({ children }: { children: any }) {
     }
 
     const clearCartMutation = useMutation({
-        mutationFn: () => {
-            return fetch('/api/cart', {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': getCsrfToken(),
-                },
-            });
-        },
+        mutationFn: clearCart,
         onSuccess: () => {
             setCartItems([]);
         }
     })
-
-    const clearCart = () => {
-        clearCartMutation.mutate();
-    };
 
     const addToCartMutation = useMutation({
         mutationFn: addToCart,
@@ -96,7 +84,7 @@ export function CartProvider({ children }: { children: any }) {
         cartItems: cartItems,
         isLoading: isLoading,
         updateQuantity: updateQuantity,
-        clearCart: clearCart,
+        clearCart: () => { clearCartMutation.mutate() },
         addToCart: addBookToCart,
     };
 

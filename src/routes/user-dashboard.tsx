@@ -1,8 +1,5 @@
 import UserSidebar from "../components/UserSidebar";
 import { useState, useEffect } from "react";
-import updateUserInfo from "@/api/updateUserInfo";
-import { useMutation } from "@tanstack/react-query";
-import updateUserPassword from "@/api/updateUserPassword";
 import { useUser } from "@/context/UserContext";
 
 const DEFAULT_USER_INFO = {
@@ -34,8 +31,7 @@ const secondaryNavigation = [
 
 
 export default function UserDashboard() {
-    const { user, refetchUser } = useUser();
-    const [userInfoUpdated, setUserInfoUpdated] = useState(false);
+    const { user, updateUser, updatePassword } = useUser();
     const [userInfoFormData, setUserInfoFormData] = useState({
         firstName: user?.first_name || DEFAULT_USER_INFO.firstName,
         lastName: user?.last_name || DEFAULT_USER_INFO.lastName,
@@ -51,7 +47,6 @@ export default function UserDashboard() {
     });
 
     useEffect(() => {
-        refetchUser();
         setUserInfoFormData({
             firstName: user?.first_name || DEFAULT_USER_INFO.firstName,
             lastName: user?.last_name || DEFAULT_USER_INFO.lastName,
@@ -60,27 +55,12 @@ export default function UserDashboard() {
             phonenumber: user?.phone_number || DEFAULT_USER_INFO.phonenumber,
             dateOfBirth: user?.date_of_birth || DEFAULT_USER_INFO.dateOfBirth,
         });
-    }, [userInfoUpdated, user])
-
-    const mutationUserInfo = useMutation({
-        mutationFn: updateUserInfo,
-        onSuccess: () => {
-            console.log('User info updated successfully');
-            setUserInfoUpdated(true);
-        },
-    })
-
-    const mutationUserPassword = useMutation({
-        mutationFn: updateUserPassword,
-        onSuccess: () => {
-            console.log('User password updated successfully');
-        }
-    })
+    }, [user])
 
     const handleSaveUserInfo = async (e) => {
         e.preventDefault();
         console.log('Saving user info');
-        mutationUserInfo.mutate({ userId: user?.id, formData: userInfoFormData });
+        updateUser({ userId: user?.id, formData: userInfoFormData });
     }
 
     const handleSavePasswordForm = async (e) => {
@@ -91,7 +71,7 @@ export default function UserDashboard() {
             console.error('Passwords do not match');
             return;
         }
-        mutationUserPassword.mutate({ userId: user?.id, passwordFormData: passwordFormData });
+        updatePassword({ userId: user?.id, passwordFormData: passwordFormData });
     }
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement | HTMLSelectElement>) => {
