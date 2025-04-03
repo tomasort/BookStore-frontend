@@ -1,3 +1,10 @@
-// async function getBooks(pagination: PaginationData): Promise<GetBooksResponse> {
-//     return fetch(`/api/api/books?page=${pagination.page}&limit=${pagination.per_page}`).then(response => response.json());
-// }
+import { Book, PaginationData } from '../types';
+
+interface GetBooksResponse {
+    books: Book[],
+    pagination: PaginationData
+}
+
+export default async function getBooks(page: number, perPage: number): Promise<GetBooksResponse> {
+    return fetch(`/api/api/books?page=${page}&limit=${perPage}`).then(response => response.json());
+}

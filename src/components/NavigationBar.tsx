@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
-import getUserId from '../getUserId';
 import Logout from './Logout';
 import { useUser } from '@/context/UserContext';
 
@@ -31,7 +30,7 @@ function NavigationBar() {
                         </li>
                         <li>
                             <Link
-                                to="/latest"
+                                to="/search/latest"
                                 className="hover:text-primary-light font-medium transition duration-300"
                             >
                                 Latest

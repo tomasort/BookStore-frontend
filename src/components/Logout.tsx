@@ -4,7 +4,7 @@ export default function Logout() {
     const { logout } = useUser();
 
     const handleLogout = async () => {
-        logout;
+        logout();
     };
 
     return (

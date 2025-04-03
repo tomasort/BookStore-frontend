@@ -6,6 +6,7 @@ import BookPage from './routes/book-page'
 import AuthorPage from './routes/author-page'
 import Root from "./routes/root"
 import Popular from "./routes/popular"
+import Latest from "./routes/latest"
 import ErrorPage from "./error-page"
 import HomePage from "./routes/home"
 import Login from "./routes/login"
@@ -78,6 +79,10 @@ const router: ReturnType<typeof createBrowserRouter> = createBrowserRouter([
                     {
                         path: "/search/results",
                         element: <SearchResults />,
+                    },
+                    {
+                        path: "/search/latest",
+                        element: <Latest />,
                     }
                 ]
             },

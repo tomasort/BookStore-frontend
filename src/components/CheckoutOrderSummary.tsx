@@ -1,7 +1,3 @@
-import { useMutation } from "@tanstack/react-query"
-import DiscountCodeForm from "./DiscountCodeForm"
-import { useCart } from "@/context/CartContext"
-import updateCart from "../api/updateCart"
 import CartItem from "./CartItem"
 import { CartItem as Item } from "@/types"
 
@@ -22,12 +18,12 @@ export default function CheckoutOrderSummary({ cartItems, total, subtotal, taxes
     return (
         <>
             {/* Order summary */}
-            <section aria-labelledby="summary-heading" className="hidden w-full max-w-md flex-col bg-gray-50 lg:flex">
+            <section aria-labelledby="summary-heading" className="hidden w-full max-w-md flex-col bg-gray-50 lg:flex max-h-screen">
                 <h2 id="summary-heading" className="sr-only">
                     Order summary
                 </h2>
 
-                <ul role="list" className="flex-auto divide-y divide-gray-200 overflow-y-auto px-6">
+                <ul role="list" className="flex-auto divide-y divide-gray-200 overflow-y-auto px-6 max-h-full">
                     {cartItems.map((item, index) => (
                         <li key={index} className="flex py-6 sm:py-10">
                             <CartItem item={item} updateQuantity={updateQuantity} />
@@ -63,13 +59,13 @@ export default function CheckoutOrderSummary({ cartItems, total, subtotal, taxes
                 </ul>
 
                 <div className="sticky bottom-0 flex-none border-t border-gray-200 bg-gray-50 p-6">
-                    <DiscountCodeForm />
-
-                    <dl className="mt-10 space-y-6 text-sm font-medium text-gray-500">
+                    {/* <DiscountCodeForm /> */}
+                    <dl className="space-y-6 text-sm font-medium text-gray-500">
                         <div className="flex justify-between">
                             <dt>Subtotal</dt>
                             <dd className="text-gray-900">{subtotal}</dd>
                         </div>
+                        {/* 
                         <div className="flex justify-between">
                             <dt className="flex">
                                 Discount
@@ -79,6 +75,8 @@ export default function CheckoutOrderSummary({ cartItems, total, subtotal, taxes
                             </dt>
                             <dd className="text-gray-900">-{discounts}</dd>
                         </div>
+                            */}
+
                         <div className="flex justify-between">
                             <dt>Taxes</dt>
                             <dd className="text-gray-900">{taxes}</dd>

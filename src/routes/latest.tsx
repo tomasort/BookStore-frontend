@@ -2,17 +2,17 @@ import { useState } from 'react';
 import BookCard from '../components/BookCard';
 import Pagination from '../components/Pagination';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import getBooks from '@/api/getBooks';
+import getLatestBooks from '@/api/getLatestBooks';
 
 
-function Popular() {
+function Latest() {
     // const [books, setBooks] = useState<BookCardData[]>([]);
     const [page, setPage] = useState(1);
     const [perPage, setPerPage] = useState(10);
 
     const { data, isFetching } = useQuery({
         queryKey: ['books', page, perPage],
-        queryFn: () => getBooks(page, perPage),
+        queryFn: () => getLatestBooks(page, perPage),
         placeholderData: keepPreviousData
     })
 
@@ -24,7 +24,7 @@ function Popular() {
 
     return (
         <div className="container mx-auto p-6">
-            <h2 className="text-3xl font-bold text-gray-800 mb-6">Popular Books</h2>
+            <h2 className="text-3xl font-bold text-gray-800 mb-6">Latest Books</h2>
             <select
                 id="perPage"
                 name="perPage"
@@ -72,5 +72,5 @@ function Popular() {
     );
 }
 
-export default Popular;
+export default Latest;
 
