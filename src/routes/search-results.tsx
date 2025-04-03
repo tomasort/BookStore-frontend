@@ -15,7 +15,7 @@ interface GetBooksResponse {
 
 function SearchResults() {
     async function getSearchResults(query: string, page: number, perPage: number): Promise<GetBooksResponse> {
-        return fetch(`/api/api/books/search?keyword=${query}&page=${page}&limit=${perPage}`).then(response => response.json());
+        return fetch(`/api/api/books/search?q=${query}&page=${page}&limit=${perPage}`).then(response => response.json());
     }
 
     const [searchParams] = useSearchParams();
