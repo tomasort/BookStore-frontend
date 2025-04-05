@@ -4,7 +4,7 @@ import Logout from './Logout';
 import { useUser } from '@/context/UserContext';
 
 function NavigationBar() {
-    const { userId } = useUser();
+    const { isAuthenticated } = useUser();
     return (
         <div className="bg-primary text-white shadow-md">
             <div className="p-4 container mx-auto flex justify-between items-center">
@@ -37,7 +37,7 @@ function NavigationBar() {
                             </Link>
                         </li>
                         <li>
-                            {userId ? (
+                            {isAuthenticated ? (
                                 <Logout />
                             ) : (
                                 <Link
@@ -49,7 +49,7 @@ function NavigationBar() {
                             )}
                         </li>
                         <li>
-                            {userId ? (
+                            {isAuthenticated ? (
                                 <Link
                                     to="/user-dashboard"
                                     className="hover:text-primary-light font-medium transition duration-300"
