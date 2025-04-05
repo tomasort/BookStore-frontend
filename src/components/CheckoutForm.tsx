@@ -44,7 +44,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         id="email-address"
                                         name="email-address"
                                         autoComplete="email"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -59,7 +59,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         id="name-on-card"
                                         name="name-on-card"
                                         autoComplete="cc-name"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -74,7 +74,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         id="card-number"
                                         name="card-number"
                                         autoComplete="cc-number"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -89,7 +89,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         name="expiration-date"
                                         id="expiration-date"
                                         autoComplete="cc-exp"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -104,7 +104,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         name="cvc"
                                         id="cvc"
                                         autoComplete="csc"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -119,7 +119,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         id="address"
                                         name="address"
                                         autoComplete="street-address"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -134,7 +134,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         id="city"
                                         name="city"
                                         autoComplete="address-level2"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -149,7 +149,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         id="region"
                                         name="region"
                                         autoComplete="address-level1"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
@@ -164,7 +164,7 @@ export default function CheckoutForm({ total, setShipping }: { total: number, se
                                         id="postal-code"
                                         name="postal-code"
                                         autoComplete="postal-code"
-                                        className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        className="block w-full rounded-md border-0 bg-white/5 py-1.5 shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     />
                                 </div>
                             </div>
