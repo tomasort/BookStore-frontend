@@ -1,3 +1,4 @@
+import authFetch from '@/api/authFetch';
 import logout from '@/api/logout';
 import getUser from '@/api/getUser';
 import login from '@/api/login';
@@ -8,6 +9,11 @@ import { useState, useContext, useEffect } from 'react';
 import { User } from '@/types';
 import getUserId from '@/getUserId';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+async function checkAuthentication() {
+    const response = await authFetch('/api/auth/check-auth')
+    return response.json();
+}
 
 type UserContextType = {
     user: User | null;
@@ -26,10 +32,23 @@ type UserContextType = {
 const UserContext = createContext<UserContextType | undefined>(undefined);
 
 export function UserProvider({ children }: { children: any }) {
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [user, setUser] = useState<User | null>(null);
     const [userId, setUserId] = useState<string | null>(() => getUserId());
     const [error, setError] = useState('');
     const queryClient = useQueryClient();
+
+    const { data: authVerificationData } = useQuery({
+        queryKey: ['isAuthenticated', userId],
+        queryFn: () => checkAuthentication(),
+    });
+
+    useEffect(() => {
+        if (authVerificationData) {
+            setIsAuthenticated(authVerificationData.logged_in);
+            setUserId(authVerificationData.user_id);
+        }
+    }, [authVerificationData]);
 
     useEffect(() => {
         const storedUserId = getUserId();
@@ -96,7 +115,7 @@ export function UserProvider({ children }: { children: any }) {
         updateUser: userInfoMutation.mutate,
         updatePassword: userPasswordMutation.mutate,
         logout: logoutMutation.mutate,
-        isAuthenticated: !!userId && !!user,
+        isAuthenticated: isAuthenticated,
     };
 
     return (
