@@ -73,7 +73,7 @@ const BookDetails = ({ bookData, averageRating, reviewsCount }: BookDetailsProps
                                     </div>
                                     <p className="sr-only">{averageRating} out of 5 stars</p>
                                 </div>
-                                <p className="ml-2 text-sm text-gray-500">{reviewsCount} reviews</p>
+                                <p className="ml-2 text-sm text-gray-500">{reviewsCount} {reviewsCount != 1 ? "reviews" : "review"} </p>
                             </div>
                             <p className="sr-only">{bookData?.rating} out of 5 stars</p>
                         </div>

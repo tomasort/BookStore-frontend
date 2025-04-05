@@ -1,12 +1,9 @@
 import { StarIcon } from '@heroicons/react/20/solid';
-import { Review as ReviewType, User } from '../types';
 import ReviewStats from '@/components/ReviewsStats';
 import Review from '../components/Review';
 import { useState, useEffect } from 'react';
-import { getCsrfToken } from '@/utils';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import postReview from '@/api/postReview';
-import { info } from 'console';
 import getReviews from '@/api/getReviews';
 
 function classNames(...classes) {
@@ -21,19 +18,23 @@ interface BookReviewProps {
 
 export default function BookReviews({ bookId, setAverageRating, setReviewsCount }: BookReviewProps) {
 
-    const [reviews, setReviews] = useState([] as ReviewType[]);
     const [showReviewInput, setShowReviewInput] = useState(false);
     const [review, setReview] = useState('');
     const [rating, setRating] = useState(0);
     const [hoverValue, setHoverValue] = useState<number | undefined>(undefined);
-    const { isPending, isLoading, data } = useQuery({
+    const queryClient = useQueryClient();
+
+    const { data, isPending, isLoading } = useQuery({
         queryKey: ['reviews', bookId],
         queryFn: () => getReviews(bookId)
     })
+
     const postReviewMutation = useMutation({
         mutationFn: postReview,
         onSuccess: () => {
             console.log('Review submitted successfully');
+            queryClient.invalidateQueries({ queryKey: ['reviews', bookId] });
+            setShowReviewInput(false);
         },
         onError: (error) => {
             if (error.message === 'Unauthorized') {
@@ -42,11 +43,6 @@ export default function BookReviews({ bookId, setAverageRating, setReviewsCount 
             alert(error.message);
         }
     })
-    useEffect(() => {
-        if (data) {
-            setReviews(data.reviews)
-        }
-    }, [data])
 
     function handleMouseOverStar(value: number | undefined) {
         setHoverValue(value)
@@ -65,7 +61,7 @@ export default function BookReviews({ bookId, setAverageRating, setReviewsCount 
             setAverageRating(data.average_rating);
             setReviewsCount(data.total_count);
         }
-    }, [reviews])
+    }, [data])
 
     async function handleReviewSubmit(event: React.MouseEvent<HTMLButtonElement>) {
         event.preventDefault();
@@ -92,7 +88,7 @@ export default function BookReviews({ bookId, setAverageRating, setReviewsCount 
                                     <StarIcon
                                         key={rating}
                                         className={classNames(
-                                            data?.average_rating > rating ? 'text-yellow-400' : 'text-gray-300',
+                                            data && data?.average_rating > rating ? 'text-yellow-400' : 'text-gray-300',
                                             'h-5 w-5 flex-shrink-0'
                                         )}
                                         aria-hidden="true"
@@ -101,7 +97,7 @@ export default function BookReviews({ bookId, setAverageRating, setReviewsCount 
                             </div>
                             <p className="sr-only">{data?.average_rating} out of 5 stars</p>
                         </div>
-                        <p className="ml-2 text-sm text-gray-900">Based on {data?.total_count} reviews</p>
+                        <p className="ml-2 text-sm text-gray-900">Based on {data?.total_count} {data?.total_count != 1 ? "reviews" : "review"}</p>
                     </div>
 
                     <ReviewStats reviewsData={data} />
@@ -126,8 +122,8 @@ export default function BookReviews({ bookId, setAverageRating, setReviewsCount 
 
                     <div className="flow-root">
                         <div className="-my-12 divide-y divide-gray-200">
-                            {reviews.length === 0 ? (<p className="py-12">Be the first to review this product!</p>) : null}
-                            {reviews.map((r) => (
+                            {data && data.reviews?.length === 0 ? (<p className="py-12">Be the first to review this product!</p>) : null}
+                            {data && data.reviews.map((r) => (
                                 <Review review={r} />
                             ))}
                         </div>
