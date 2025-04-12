@@ -1,3 +1,10 @@
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/Select"
 import { useSearchParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import BookCard from '../components/BookCard';
@@ -38,17 +45,18 @@ function SearchResults() {
     return (
         <div className="container mx-auto p-6">
             <h2 className="text-3xl font-bold text-gray-800 mb-6">Search Results: {query}</h2>
-            <select
-                id="perPage"
-                name="perPage"
-                className="block max-w-full rounded-md border border-gray-300 py-1.5 text-left text-base font-medium leading-5 text-gray-700 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-                value={perPage}
-                onChange={(event) => setPerPage(parseInt(event.target.value, 10))}
-            >
-                {[10, 20, 30].map((num) => (
-                    <option key={num} value={num}>{num}</option>
-                ))}
-            </select>
+            <div className="mb-4 flex items-center">
+                <Select value={perPage.toString()} onValueChange={(value) => setPerPage(parseInt(value, 10))}>
+                    <SelectTrigger className="w-[80px]">
+                        <SelectValue placeholder="Per page" />
+                    </SelectTrigger>
+                    <SelectContent >
+                        {[10, 20, 30].map((num) => (
+                            <SelectItem key={num} value={num.toString()}>{num}</SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
             {isFetching ? (
                 <p>Loading...</p>
             ) : (

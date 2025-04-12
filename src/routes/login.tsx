@@ -1,3 +1,4 @@
+import { Input } from '@/components/Input';
 import { useState } from 'react';
 import SocialLogin from '../components/SocialLogin';
 import AuthFormHeader from '../components/AuthFormHeader';
@@ -40,14 +41,14 @@ function Login() {
                                 Username
                             </label>
                             <div className="mt-2">
-                                <input
+                                <Input
                                     id="username"
                                     name="username"
                                     type="text"
                                     value={formData.username}
                                     onChange={handleInputChange}
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    placeholder="Enter your username"
                                 />
                             </div>
                         </div>
@@ -57,27 +58,27 @@ function Login() {
                                 Password
                             </label>
                             <div className="mt-2">
-                                <input
+                                <Input
                                     id="password"
                                     name="password"
                                     type="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    placeholder="Enter your password"
                                 />
                             </div>
                         </div>
 
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
-                                <input
+                                <Input
                                     id="rememberMe"
                                     name="rememberMe"
                                     type="checkbox"
                                     checked={formData.rememberMe}
                                     onChange={handleInputChange}
-                                    className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                                    className="h-4 w-4 transition duration-150 ease-in-out text-indigo-600 bg-primary focus:ring-indigo-600"
                                 />
                                 <label htmlFor="remember-me" className="ml-3 block text-sm leading-6 text-gray-900">
                                     Remember me

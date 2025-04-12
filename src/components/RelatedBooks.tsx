@@ -1,6 +1,6 @@
 import BookCard from '@/components/BookCard';
 import { useQuery } from '@tanstack/react-query';
-import { Book, PaginationData } from '@types';
+import { Book, PaginationData } from '../types';
 import {
     Carousel,
     CarouselContent,

@@ -97,9 +97,9 @@ export interface User {
     status: string;
     id_number: string | null;
     id_type: string | null;
-    favorites: BookCardData[]; // Adjust the type as needed
+    favorites: Book[]; // Adjust the type as needed
     orders: any[]; // Adjust the type as needed
-    wishlist: BookCardData[]; // Adjust the type as needed
+    wishlist: Book[]; // Adjust the type as needed
 }
 
 export interface CartItem {

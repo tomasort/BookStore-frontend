@@ -15,7 +15,7 @@ import Register from "./routes/register"
 import Checkout from "./routes/checkout"
 import SearchResults from './routes/search-results'
 import UserSidebar from './components/UserSidebar'
-import UserDashboard, { profileLoader } from './routes/user-dashboard'
+import UserDashboard from './routes/user-dashboard'
 import { NotificationProvider } from './context/NotificationContext';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'

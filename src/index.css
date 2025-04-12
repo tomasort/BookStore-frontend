@@ -1,3 +1,86 @@
+@import "tailwindcss";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+/* Extend theme with layer */
+@tailwind theme;
+
+@layer theme {
+    :root {
+        --color-primary-light: #bfdbfe;
+        --color-primary: #2563eb;
+        --color-primary-dark: #3b82f6;
+
+        --color-secondary-light: #FCEADE;
+        --color-secondary: #F46036;
+        --color-secondary-dark: #CB2D3E;
+
+        --color-neutral-light: #F6F6F6;
+        --color-neutral: #A8A8A8;
+        --color-neutral-dark: #3B3B3B;
+
+        --color-background-light: #F6F6F6;
+        --color-background: #FFFFFF;
+        --color-background-dark: #3B3B3B;
+
+        --color-foreground-light: #F6F6F6;
+        --color-foreground: #2563eb;
+        --color-foreground-dark: #3B3B3B;
+
+        --color-popover: #FFFFFF;
+        --color-popover-foreground: #3B3B3B;
+    }
+}
+
+/* Add utilities to use the colors */
+@tailwind utilities;
+
+@layer utilities {
+    .bg-primary {
+        background-color: var(--color-primary);
+    }
+
+    .bg-primary-light {
+        background-color: var(--color-primary-light);
+    }
+
+    .bg-primary-dark {
+        background-color: var(--color-primary-dark);
+    }
+
+    .bg-secondary {
+        background-color: var(--color-secondary);
+    }
+
+    .bg-secondary-light {
+        background-color: var(--color-secondary-light);
+    }
+
+    .bg-secondary-dark {
+        background-color: var(--color-secondary-dark);
+    }
+
+    .text-primary {
+        color: var(--color-primary);
+    }
+
+    .text-primary-light {
+        color: var(--color-primary-light);
+    }
+
+    .text-primary-dark {
+        color: var(--color-primary-dark);
+    }
+
+    .bg-popover {
+        background-color: var(--color-popover);
+    }
+
+    .text-popover-foreground {
+        color: var(--color-popover-foreground);
+    }
+
+    /* Add more as needed */
+}

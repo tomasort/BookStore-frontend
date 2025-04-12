@@ -1,3 +1,4 @@
+import { Input } from '@/components/Input';
 import { useState } from 'react';
 import AuthFormHeader from '../components/AuthFormHeader';
 
@@ -82,14 +83,14 @@ export default function Register() {
                                 Username
                             </label>
                             <div className="mt-2">
-                                <input
+                                <Input
                                     id="username"
                                     name="username"
                                     type="text"
                                     value={formData.username}
                                     onChange={handleInputChange}
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    placeholder="Enter your username"
                                 />
                             </div>
                         </div>
@@ -98,14 +99,14 @@ export default function Register() {
                                 Email
                             </label>
                             <div className="mt-2">
-                                <input
+                                <Input
                                     id="email"
                                     name="email"
                                     type="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    placeholder="Enter your email"
                                 />
                             </div>
                         </div>
@@ -114,14 +115,14 @@ export default function Register() {
                                 Password
                             </label>
                             <div className="mt-2">
-                                <input
+                                <Input
                                     id="password"
                                     name="password"
                                     type="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    placeholder="Enter your password"
                                 />
                             </div>
                         </div>
@@ -130,14 +131,14 @@ export default function Register() {
                                 Confirm Password
                             </label>
                             <div className="mt-2">
-                                <input
+                                <Input
                                     id="confirmPassword"
                                     name="confirmPassword"
                                     type="password"
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
                                     required
-                                    className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                    placeholder="Confirm your password"
                                 />
                             </div>
                         </div>

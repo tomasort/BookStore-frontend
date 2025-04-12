@@ -1,3 +1,5 @@
+import { Input } from './Input';
+import { cn } from '../utils';
 import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState, useEffect } from 'react';
@@ -32,7 +34,13 @@ async function fetchSuggestions(query: string): Promise<Suggestions> {
     return response.json();
 };
 
-const SearchBar = () => {
+interface SearchBarProps {
+    onFocusChange?: (isFocused: boolean) => void;
+    className?: string;
+}
+
+
+const SearchBar = ({ onFocusChange = () => { }, className = "" }: SearchBarProps) => {
     const navigate = useNavigate();
     const [searchInput, setSearchInput] = useState('');
     const [debouncedSearchInput, setDebouncedSearchInput] = useState('');
@@ -46,6 +54,12 @@ const SearchBar = () => {
         }, 300);
         return () => clearTimeout(timeout);
     }, [searchInput]);
+
+    // Notify parent component when focus changes
+    useEffect(() => {
+        onFocusChange(isFocused);
+        console.log("isFocused", isFocused);
+    }, [isFocused, onFocusChange]);
 
     // Fetch suggestions based on debounced input
     const { data: suggestions } = useQuery({
@@ -68,49 +82,55 @@ const SearchBar = () => {
     };
 
     return (
-        <div
-            className={`relative transition-all duration-300 ease-in-out ${isFocused ? "w-2/5" : "w-1/4"}`}
-        >
-            <form
-                className="flex items-center bg-white text-gray-800 rounded-full overflow-hidden"
-                onSubmit={handleSearch}
+        <>
+            {/* 
+            <div
+                className={`relative transition-all duration-300 ease-in-out ${isFocused ? "w-3/5" : "w-2/4"}`}
             >
-                <input
-                    type="search"
-                    placeholder="Search for books"
-                    value={searchInput}
-                    onChange={(event) => setSearchInput(event.target.value)}
-                    onFocus={() => {
-                        setIsFocused(true);
-                        setShowSuggestions(true);
-                    }}
-                    onBlur={() => {
-                        setIsFocused(false);
-                        setTimeout(() => setShowSuggestions(false), 200);
-                    }}
-                    className="px-4 py-2 outline-none w-full"
-                />
-                <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-500 outline-none text-white font-semibold hover:bg-blue-700 transition duration-300"
+            </div>
+            */}
+            <div className={cn("relative", className)}>
+                <form
+                    className="flex items-center bg-white text-gray-800 rounded-full overflow-hidden"
+                    onSubmit={handleSearch}
                 >
-                    <MagnifyingGlassIcon className="h-6 w-6" />
-                </button>
-            </form>
-            {suggestions && debouncedSearchInput && showSuggestions && (suggestions.books.length > 0) && (
-                <ul className="absolute text-black z-50 w-full bg-white border border-gray-300 rounded mt-2 shadow-lg max-h-96 overflow-y-auto">
-                    {suggestions.books.map((book: BookSuggestion, index: number) => (
-                        <li
-                            key={index}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
-                            onClick={() => handleSuggestionClick(book.id)}
-                        >
-                            {book.title}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
+                    <Input
+                        type="search"
+                        placeholder="Search for books"
+                        value={searchInput}
+                        onChange={(event) => setSearchInput(event.target.value)}
+                        onFocus={() => {
+                            setIsFocused(true);
+                            setShowSuggestions(true);
+                        }}
+                        onBlur={() => {
+                            setIsFocused(false);
+                            setTimeout(() => setShowSuggestions(false), 200);
+                        }}
+                        className=" py-2 outline-none w-full border-none "
+                    />
+                    <button
+                        type="submit"
+                        className="px-4 py-2 bg-blue-500 outline-none text-white font-semibold hover:bg-blue-700 transition duration-300"
+                    >
+                        <MagnifyingGlassIcon className="h-6 w-6" />
+                    </button>
+                </form>
+                {suggestions && debouncedSearchInput && showSuggestions && (suggestions.books.length > 0) && (
+                    <ul className="absolute text-black z-50 w-full bg-white border border-gray-300 rounded mt-2 shadow-lg max-h-96 overflow-y-auto">
+                        {suggestions.books.map((book: BookSuggestion, index: number) => (
+                            <li
+                                key={index}
+                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                                onClick={() => handleSuggestionClick(book.id)}
+                            >
+                                {book.title}
+                            </li>
+                        ))}
+                    </ul>
+                )}
+            </div>
+        </>
     );
 }
 
