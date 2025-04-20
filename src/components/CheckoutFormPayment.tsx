@@ -1,134 +1,58 @@
-import { Input } from '@/components/Input';
+import PaymentMethodOption from '@/components/PaymentMethodOption';
 import { useState } from 'react';
+import CardPayment from './CardPayment';
+import ZellePayment from './ZellePayment';
+import PagoMovilPayment from './PagoMovilPayment';
+
+type PaymentMethod = 'card' | 'zelle' | 'pagoMovil';
 
 export default function CheckoutFormPayment() {
-    const [sameAsShipping, setSameAsShipping] = useState(true);
+    const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('card');
     return (
         <>
             <div className="grid grid-cols-12 gap-x-4 gap-y-6">
                 <h2 className="col-span-full text-lg font-medium text-gray-900">Payment</h2>
+
+                {/* Payment Method Section */}
                 <div className="col-span-full">
-
-                    <div className="mt-1">
-                        <Input
-                            type="text"
-                            id="name-on-card"
-                            name="name-on-card"
-                            autoComplete="cc-name"
-                            placeholder="Name on card"
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <PaymentMethodOption
+                            method="card"
+                            label="Credit/Debit Card"
+                            selected={paymentMethod === 'card'}
+                            onClick={() => setPaymentMethod('card')}
+                        />
+                        <PaymentMethodOption
+                            method="zelle"
+                            label="Zelle"
+                            selected={paymentMethod === 'zelle'}
+                            onClick={() => setPaymentMethod('zelle')}
+                        />
+                        <PaymentMethodOption
+                            method="pagoMovil"
+                            label="Pago Móvil"
+                            selected={paymentMethod === 'pagoMovil'}
+                            onClick={() => setPaymentMethod('pagoMovil')}
                         />
                     </div>
                 </div>
 
-                <div className="col-span-full">
+                {/* Card Details Section */}
+                {paymentMethod === 'card' && (
+                    <CardPayment />
+                )}
 
-                    <div className="mt-1">
-                        <Input
-                            type="text"
-                            id="card-number"
-                            name="card-number"
-                            autoComplete="cc-number"
-                            placeholder="Card number"
-                        />
-                    </div>
-                </div>
+                {/* Zelle Payment Section */}
+                {paymentMethod === 'zelle' && (
+                    <ZellePayment />
+                )}
 
-                <div className="col-span-8 sm:col-span-9">
+                {/* Pago Móvil Section */}
+                {paymentMethod === 'pagoMovil' && (
+                    <PagoMovilPayment />
+                )}
 
-                    <div className="mt-1">
-                        <Input
-                            type="text"
-                            name="expiration-date"
-                            id="expiration-date"
-                            autoComplete="cc-exp"
-                            placeholder="MM / YY"
-                        />
-                    </div>
-                </div>
-
-                <div className="col-span-4 sm:col-span-3">
-
-                    <div className="mt-1">
-                        <Input
-                            type="text"
-                            name="cvc"
-                            id="cvc"
-                            autoComplete="csc"
-                            placeholder="CVC"
-                        />
-                    </div>
-                </div>
             </div>
-            <div className="mt-6 flex space-x-2">
-                <div className="flex h-5 items-center">
-                    <input
-                        id="same-as-shipping"
-                        name="same-as-shipping"
-                        type="checkbox"
-                        checked={sameAsShipping}
-                        onChange={(e) => setSameAsShipping(e.target.checked)}
-                        defaultChecked
-                        className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                    />
-                </div>
-                <label htmlFor="same-as-shipping" className="text-sm font-medium text-gray-900">
-                    Billing address is the same as shipping address
-                </label>
-            </div>
-            {!sameAsShipping && (
-                <div className="mt-7 grid grid-cols-12 gap-x-4 gap-y-6">
-                    <div className="col-span-full">
-                        <div className="mt-1">
-                            <Input
-                                type="text"
-                                id="address"
-                                name="address"
-                                autoComplete="street-address"
-                                placeholder="Billing address"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="col-span-full sm:col-span-4">
-
-                        <div className="mt-1">
-                            <Input
-                                type="text"
-                                id="city"
-                                name="city"
-                                autoComplete="address-level2"
-                                placeholder="City"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="col-span-full sm:col-span-4">
-                        <div className="mt-1">
-                            <Input
-                                type="text"
-                                id="region"
-                                name="region"
-                                autoComplete="address-level1"
-                                placeholder="State / Province"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="col-span-full sm:col-span-4">
-                        <div className="mt-1">
-                            <Input
-                                type="text"
-                                id="postal-code"
-                                name="postal-code"
-                                autoComplete="postal-code"
-                                placeholder="Postal code"
-                            />
-                        </div>
-                    </div>
-
-                </div>
-
-            )}
 
 
         </>
